@@ -224,8 +224,6 @@ Object.defineProperties(streamdeck, {
                 });
             }
 
-            $onmessage.init();
-
             // start connecting
             $conn.on('message', $onmessage);
             $conn.on('message', function (evt) {
