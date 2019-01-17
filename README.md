@@ -341,7 +341,7 @@ The data accompanying the event; the value varies dependant on the event being e
 ## Host
 Describes streamdeck's host enviornment
 
-| Property*  | Type   | Description                                          |
+| Property\* | Type   | Description                                          |
 |------------|:------:|------------------------------------------------------|
 | `language` | String | The current language Stream Deck's software is using |
 | `platform` | String | The platform; `"windows"` or `"mac"`                 |
@@ -354,12 +354,12 @@ Describes streamdeck's host enviornment
 ## Device 
 Describes a streamdeck hardware device
 
-| Property  | Type   | Description                                  |
-|-----------|:------:|----------------------------------------------|
-| `id`      | String | An opaque value used to reference the device |
-| `type`    | Number | *unknown*                                    |
-| `columns` | Number | The number of button columns the device has  |
-| `rows`    | Number | The number of button rows the device has     |
+| Property\* | Type   | Description                                  |
+|------------|:------:|----------------------------------------------|
+| `id`       | String | An opaque value used to reference the device |
+| `type`     | Number | *unknown*                                    |
+| `columns`  | Number | The number of button columns the device has  |
+| `rows`     | Number | The number of button rows the device has     |
 
 \*: Properties are read-only
 
@@ -368,7 +368,7 @@ Describes a streamdeck hardware device
 ## Title
 Describes a context's title
 
-| Property    | Type    | Description                                                                         |
+| Property\*  | Type    | Description                                                                         |
 |-------------|:-------:|-------------------------------------------------------------------------------------|
 | `shown`     | Boolean | Indicates if the title is shown                                                     |
 | `text`      | String  | The title text                                                                      |
@@ -385,7 +385,7 @@ Describes a context's title
 ## Context
 Describes a context
 
-| Property        | Type                | Description
+| Property\*      | Type                | Description
 |-----------------|:-------------------:|-------------------------------------------------------------------|
 | `action`        | String              | Action id associated with the context                             |
 | `uuid`          | String              | An opaque value identifying the context                           |
@@ -402,8 +402,55 @@ Describes a context
 <br>
 
 #### `<Context>.setTitle`
+Attempts to set the title text for the context
+
+| Arguments | Type         | Description                                                     |
+|-----------|:------------:|-----------------------------------------------------------------|
+| `title`   | String\|Null | The title text to set; specify null to revert changes           |
+| `target`  | Number       | 0(default): Both software and hardare, 1: hardware, 2: software |
+
+<br>
+
 #### `<Context>.setImage`
+Attempts to set the context's image
+
+| Arguments | Type   | Description                                                     |
+|-----------|:------:|-----------------------------------------------------------------|
+| `image`   | String | The image as a base64 data URI to use                           |
+| `target`  | Number | 0(default): Both software and hardare, 1: hardware, 2: software |
+
+<br>
+
 #### `<Context>.showAlert`
+Shows the alert icon on the context for a few moments
+
+| Arguments | Type | Description |
+|-----------|:----:|-------------|
+| *none*    |      |             |
+
+<br>
+
 #### `<Context>.showOk`
+Shows the ok icon on the context for a few moments
+
+| Arguments | Type | Description |
+|-----------|:----:|-------------|
+| *none*    |      |             |
+
+<br>
+
 #### `<Context>.setState`
-#### `>Context>.sendToPlugin`
+Sets the context to a predefined state
+
+| Arguments | Type   | Description                                   |
+|-----------|:------:|-----------------------------------------------|
+| `state`   | Number | The 0-based state index to set the context to |
+
+<br>
+
+#### `<Context>.sendToPlugin`
+Sends a message to the plugin layer
+
+| Arguments | Type   | Description      |
+|-----------|:------:|------------------|
+| `message` | *any*  | The data to send |
