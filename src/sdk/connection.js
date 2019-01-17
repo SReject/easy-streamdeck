@@ -39,10 +39,10 @@ function onOpen() {
 function onMessage(evt) {
     this.emit('message', evt.data);
 }
-function onError(evt) {
+function onError() {
     cleanup(this);
 
-    this.emit('error', evt);
+    this.emit('error');
 
     reconnect(this);
 }

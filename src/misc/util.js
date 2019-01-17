@@ -114,6 +114,8 @@ function isKey(subject, key) {
 }
 
 const isCallable = (function() {
+
+    // https://github.com/ljharb/is-callable
     let fnToStr = Function.prototype.toString,
         fnClass = '[object Function]',
         toStr = Object.prototype.toString,
