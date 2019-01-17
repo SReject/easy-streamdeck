@@ -1,1 +1,1 @@
-This is a recreation of Elgato's Stream Deck counter plugin wrote to make use of easy-streamdeck.js
+This is a recreation of Elgato's Stream Deck NumberDisplay plugin wrote to make use of easy-streamdeck.js
