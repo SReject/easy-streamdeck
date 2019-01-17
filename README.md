@@ -418,6 +418,16 @@ Attempts to set the context's image
 
 <br>
 
+#### `<Context>.setImageFromUrl`
+Attempts to set the context's image
+
+| Arguments | Type   | Description                                                     |
+|-----------|:------:|-----------------------------------------------------------------|
+| `url`     | String | The image url to load                                           |
+| `target`  | Number | 0(default): Both software and hardare, 1: hardware, 2: software |
+
+<br>
+
 #### `<Context>.showAlert`
 Shows the alert icon on the context for a few moments
 
