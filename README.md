@@ -29,18 +29,17 @@ After building, include the easy-streamdeck.js file as the first resource to be 
 When loaded in a browser-esq enviornment, easy-streamdeck is added to the global scope as `streamdeck` otherwise it is exported via `module.exports`
 
 
-| Property\*      | Type                          | Description                                                      |
-|-----------------|:-----------------------------:|------------------------------------------------------------------|
-| `ready`         | Boolean                       | `true` if the library is ready, `false` otherwise                |
-| `port`          | Number                        | The port that will be used to connect to Stream Deck's software  |
-| `uuid`          | String                        | The current context's UUID/opaqueValue                           |
-| `layer`         | String                        | The current context's layer: `"plugin"` or `"propertyinspector"` |
-| `host`          | [`Host`](#host)               | Data related to the host                                         |
-| `devices`       | Array\<[`Device`](#device)\>  | Tracked connected devices                                        |
-| `contexts`      | Array\<[`Context`](#context\> | Tracked buttons related to the plugin                            |
-| `contextId`     | String                        | The context's id (propertyinspector layer only)                  |
-| `actionId`      | String                        | The context's actionId (propertyinspector layer only)            |
-
+| Property\*      | Type                           | Description                                                      |
+|-----------------|:------------------------------:|------------------------------------------------------------------|
+| `ready`         | Boolean                        | `true` if the library is ready, `false` otherwise                |
+| `port`          | Number                         | The port that will be used to connect to Stream Deck's software  |
+| `uuid`          | String                         | The current context's UUID/opaqueValue                           |
+| `layer`         | String                         | The current context's layer: `"plugin"` or `"propertyinspector"` |
+| `host`          | [`Host`](#host)                | Data related to the host                                         |
+| `devices`       | Array\<[`Device`](#device)\>   | Tracked connected devices                                        |
+| `contexts`      | Array\<[`Context`](#context)\> | Tracked buttons related to the plugin                            |
+| `contextId`     | String                         | The context's id (propertyinspector layer only)                  |
+| `actionId`      | String                         | The context's actionId (propertyinspector layer only)            |  
 \*: Properties are read-only
 
 <br><br><br>
@@ -64,8 +63,7 @@ Adds an event listener to the streamdeck instance.
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
 | `handler`  | function | The callback to handle the event                               |
-| `once`     |  boolean | If true the handler will be removed after the event is emitted |
-
+| `once`     |  boolean | If true the handler will be removed after the event is emitted |  
 \*: Arguments must match those used to create the listener exactly  
 
 <br>  
@@ -86,8 +84,7 @@ Alias for `streamdeck.off(event, handler, true)`
 | Argument\* |   Type   | Description                                                    |
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
-| `handler`  | function | The callback to handle the event                               |
-
+| `handler`  | function | The callback to handle the event                               |  
 \*: Arguments must match those used to create the listener exactly  
 
 <br>  
@@ -341,11 +338,12 @@ The data accompanying the event; the value varies dependant on the event being e
 ## Host
 Describes streamdeck's host enviornment
 
-| Property   | Type   | Description                                          |
+| Property*  | Type   | Description                                          |
 |------------|:------:|------------------------------------------------------|
 | `language` | String | The current language Stream Deck's software is using |
 | `platform` | String | The platform; `"windows"` or `"mac"`                 |
 | `version`  | String | Stream Deck's software version                       |  
+\*: Properties are read-only
 
 <br>
 
@@ -358,6 +356,7 @@ Describes a streamdeck hardware device
 | `type`    | Number | *unknown*                                    |
 | `columns` | Number | The number of button columns the device has  |
 | `rows`    | Number | The number of button rows the device has     |  
+\*: Properties are read-only
 
 <br>
 
@@ -372,7 +371,8 @@ Describes a context's title
 | `style`     | String  | *unknown*                                                                           |
 | `underline` | Boolean | `true` if the text is to be underlined; `false` otherwise                           |
 | `color`     | String  | Color used to display the title as a hex color value                                |
-| `alignment` | String  | `top`, `middle`, or `bottom` indicating how the title text is aligned on the button |
+| `alignment` | String  | `top`, `middle`, or `bottom` indicating how the title text is aligned on the button |  
+\*: Properties are read-only
 
 <br>
 
