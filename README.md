@@ -39,6 +39,9 @@ Some properties are only available after `streamdeck.start()` is invoked
 `true` if streamdeck is ready  
 `false` if streamdeck is not ready 
 
+&nbsp;  
+&nbsp;
+
 
 #### `streamdeck.port` 
 *`Number`, `Read-Only`*  
@@ -109,7 +112,7 @@ The actionId for the property inspector
 
 
 
-
+<br><br><br><br>
 ## Methods
 
 #### `streamdeck.on`  
@@ -197,4 +200,45 @@ Creates an untracked [context](#context-instance) instance.
 | `context`  | string | The context's opaque value                       |
 
 
-# Rest of documentation to-do
+<br><br><br><br>
+## Events
+*TODO: Need to document these*
+
+#### `ready`
+Emitted when easy-streamdeck is ready
+
+
+#### `websocket:connect`
+#### `websocket:message`
+#### `websocket:close`
+#### `websocket:error`
+
+#### `streamdeck:keypress:up`
+#### `streamdeck:keypress:down`
+#### `streamdeck:keypress`
+
+#### `streamdeck:application:launch`
+#### `streamdeck:application:terminate`
+#### `streamdeck:application`
+
+#### `streamdeck:button:appear`
+#### `streamdeck:button:titlechange`
+#### `streamdeck:button:disappear`
+#### `streamdeck:button`
+
+#### `streamdeck:messagerelay`
+
+<br><br><br><br>
+# Structures
+
+
+<br><br><br><br>
+## Event
+
+
+<br><br><br><br>
+## Device Instance
+
+
+<br><br><br><br>
+## Context Instance
