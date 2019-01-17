@@ -37,73 +37,81 @@ Some properties are only available after `streamdeck.start()` is invoked
 *`Boolean`, `Read-Only`*  
 
 `true` if streamdeck is ready  
-`false` if streamdeck is not ready 
+`false` if streamdeck is not ready  
 
-&nbsp;  
-&nbsp;
-
+<br>  
 
 #### `streamdeck.port` 
 *`Number`, `Read-Only`*  
 
-The websocket port number to be used when connecting to Stream Deck's software
+The websocket port number to be used when connecting to Stream Deck's software  
 
+<br>  
 
 #### `streamdeck.uuid`
 *`String`, `Read-only`*
 
-The current context's UUID
+The current context's UUID  
 
+<br>  
 
 #### `streamdeck.layer`
 *`String`, `Read-Only`*
 
 The layer of which the current instance is running.  
 
-Will be `plugin` or `propertyinspector`
+Will be `plugin` or `propertyinspector`  
 
+<br>  
 
 #### `streamdeck.host`
 *`Object`, `Read-Only`*
 
-Information related to the host environment
+Information related to the host environment  
 
+<br>  
 
 #### `streamdeck.host.platform`
 *`String`, `Read-Only`*  
 
-The platform; `windows` or `mac`
+The platform; `windows` or `mac`  
 
+<br>  
 
 #### `streamdeck.host.language`
 *`String`, `Read-Only`*
 
-The language Stream Deck's software is using: `en`, `es`, etc
+The language Stream Deck's software is using: `en`, `es`, etc  
 
+<br>  
 
 #### `streamdeck.host.version`
 *`String`, `Read-Only`*
 
-Stream Deck software's version
+Stream Deck software's version  
 
+<br>  
 
 #### `streamdeck.devices`
 *`Array<Devices>`, `Read-Only`*
 
-List of the currently known connected Stream Deck [devices](#device-instance)
+List of the currently known connected Stream Deck [device instances](#device)  
 
+<br>  
 
 #### `streamdeck.contexts`
 *`Array<Context>`, `Read-Only`, `Background-Only`*
 
-List of known buttons related to the plugin
+List of known buttons related to the plugin  
 
+<br>  
 
 #### `streamdeck.contextId`
 *`String`, `Read-Only`, `PropertyInspector-Only`*
 
-The contextId for the property inspector
+The contextId for the property inspector  
 
+<br>  
 
 #### `streamdeck.actionId`
 *`String`, `Read-Only`, `PropertyInspector-Only`*
@@ -112,7 +120,7 @@ The actionId for the property inspector
 
 
 
-<br><br><br><br>
+<br><br><br>
 ## Methods
 
 #### `streamdeck.on`  
@@ -122,8 +130,9 @@ Adds an event listener to the streamdeck instance
 |-----------|:--------:|----------------------------------------------------------------|
 | `event`   |  string  | The event to listen for                                        |
 | `handler` | function | The callback to handle the event                               |
-| `once`    |  boolean | If true the handler will be removed after the event is emitted |
+| `once`    |  boolean | If true the handler will be removed after the event is emitted |  
 
+<br>  
 
 #### `streamdeck.off`  
 Adds an event listener to the streamdeck instance.
@@ -134,8 +143,9 @@ Adds an event listener to the streamdeck instance.
 | `handler`  | function | The callback to handle the event                               |
 | `once`     |  boolean | If true the handler will be removed after the event is emitted |
 
-\*: Arguments must match those used to create the listener exactly
+\*: Arguments must match those used to create the listener exactly  
 
+<br>  
 
 ##### `streamdeck.once`  
 Alias for `streamdeck.on(event, handler, true)`
@@ -143,8 +153,9 @@ Alias for `streamdeck.on(event, handler, true)`
 | Argument\* |   Type   | Description                                                    |
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
-| `handler`  | function | The callback to handle the event                               |
+| `handler`  | function | The callback to handle the event                               |  
 
+<br>  
 
 #### `streamdeck.nonce`  
 Alias for `streamdeck.off(event, handler, true)`
@@ -152,32 +163,36 @@ Alias for `streamdeck.off(event, handler, true)`
 | Argument\* |   Type   | Description                                                    |
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
-| `handler`  | function | The callback to handle the event                               |
+| `handler`  | function | The callback to handle the event                               |  
 
+<br>  
 
 #### `streamdeck.openUrl`
 Tell streamdeck to open the specified url in the native default browser
 
 | Argument\* |  Type  | Description                |
 |------------|:------:|----------------------------|
-| `url`      | string | The URL to open            |
+| `url`      | string | The URL to open            |  
 
+<br>  
 
 #### `streamdeck.send`
 Sends the data to Stream Deck's software
 
 | Argument\* |  Type  | Description                |
 |------------|:------:|----------------------------|
-| `data`     | string | The data to send           |
+| `data`     | string | The data to send           |  
 
+<br>  
 
 #### `streamdeck.sendJSON`
 Uses `JSON.stringify` and then sends the stringified data to Stream Deck's software
 
 | Argument\* |  Type  | Description                |
 |------------|:------:|----------------------------|
-| `data`     | *any*  | The data to send           |
+| `data`     | *any*  | The data to send           |  
 
+<br>  
 
 #### `streamdeck.switchToProfile`
 *`Background-Only`*
@@ -186,13 +201,14 @@ Tell streamdeck to switch to a predefined profile
 
 | Argument\*    |  Type  | Description                                                           |
 |---------------|:------:|-----------------------------------------------------------------------|
-| `profileName` | string | The exact profile name as it is defined in the plugin's manifest.json |
+| `profileName` | string | The exact profile name as it is defined in the plugin's manifest.json |  
 
+<br>  
 
 #### `streamdeck.createContext`
 *`Background-Only`*
 
-Creates an untracked [context](#context-instance) instance.
+Creates an untracked [context instance](#context)
 
 | Argument\* |  Type  | Description                                      |
 |------------|:------:|--------------------------------------------------|
@@ -200,45 +216,84 @@ Creates an untracked [context](#context-instance) instance.
 | `context`  | string | The context's opaque value                       |
 
 
-<br><br><br><br>
+<br><br><br>
 ## Events
-*TODO: Need to document these*
+All events are emitted with a single [event instance](#event) argument
+
 
 #### `ready`
-Emitted when easy-streamdeck is ready
+Emitted when easy-streamdeck is ready  
 
+<br>  
 
-#### `websocket:connect`
-#### `websocket:message`
-#### `websocket:close`
-#### `websocket:error`
+#### `websocket:connect`  
 
-#### `streamdeck:keypress:up`
-#### `streamdeck:keypress:down`
-#### `streamdeck:keypress`
+<br>  
 
-#### `streamdeck:application:launch`
-#### `streamdeck:application:terminate`
-#### `streamdeck:application`
+#### `websocket:message`  
 
-#### `streamdeck:button:appear`
-#### `streamdeck:button:titlechange`
-#### `streamdeck:button:disappear`
-#### `streamdeck:button`
+<br>  
+
+#### `websocket:close`  
+
+<br>  
+
+#### `websocket:error`  
+
+<br>  
+
+#### `streamdeck:keypress:up`  
+
+<br>  
+
+#### `streamdeck:keypress:down`  
+
+<br>  
+
+#### `streamdeck:keypress`  
+
+<br>  
+
+#### `streamdeck:application:launch`  
+
+<br>  
+
+#### `streamdeck:application:terminate`  
+
+<br>  
+
+#### `streamdeck:application`  
+
+<br>  
+
+#### `streamdeck:button:appear`  
+
+<br>  
+
+#### `streamdeck:button:titlechange`  
+
+<br>  
+
+#### `streamdeck:button:disappear`  
+
+<br>  
+
+#### `streamdeck:button`  
+
+<br>  
 
 #### `streamdeck:messagerelay`
 
-<br><br><br><br>
+<br><br><br>
 # Structures
 
 
-<br><br><br><br>
-## Event
+## Event  
 
+<br>
 
-<br><br><br><br>
-## Device Instance
+## Device  
 
+<br>
 
-<br><br><br><br>
-## Context Instance
+## Context
