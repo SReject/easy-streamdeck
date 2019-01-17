@@ -1,0 +1,29 @@
+{
+  "name": "easy-streamdeck-sdk",
+  "version": "1.0.0",
+  "description": "Abstraction layer for streamdeck's SDK",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify index.js > build/easy-streamdeck.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sreject/easy-streamdeck.git"
+  },
+  "keywords": [
+    "streamdeck",
+    "stream",
+    "deck",
+    "sdk",
+    "abstraction"
+  ],
+  "author": "Team Crowbar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sreject/easy-streamdeck/issues"
+  },
+  "homepage": "https://github.com/sreject/easy-streamdeck#readme",
+  "devDependencies": {
+    "browserify": ">=16.2.3"
+  }
+}

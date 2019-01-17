@@ -1,0 +1,36 @@
+{
+    "Name": "easy-streamdeck Example",
+    "Author": "SReject",
+    "Description": "Example plugin for using easy-streamdeck",
+    "URL": "https://github.com/SReject/easy-streamdeck",
+    "Version": "1.0.0",
+    "OS": [
+        {
+            "Platform": "mac", 
+            "MinimumVersion" : "10.11"
+        },
+        {
+            "Platform": "windows", 
+            "MinimumVersion" : "10"
+        }
+    ],
+
+    "Actions": [
+        {
+            "Name": "Trigger ActionGroup",
+            "States": [
+                {
+                    "Title": "Test",
+                    "TitleAlignment": "middle",
+                    "FontSize": "16"
+                }
+            ],
+            "SupportedInMultiActions": false,
+            "ToolTip": "This is a test",
+            "UUID": "com.crowbartools.easystreamdeck.action"
+        }
+    ],
+
+    "CodePath": "./example/background.html",
+    "PropertyInspectorPath": "./example/action.html"
+}

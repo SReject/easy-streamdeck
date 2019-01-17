@@ -1,0 +1,17 @@
+* text=auto
+
+.gitignore     text eol=lf
+.gitattributes text eol=lf
+.npmignore     text eol=lf
+
+TODO         text eol=lf
+CONTRIBUTE   text eol=lf
+CONTRIBUTING text eol=lf
+LICENSE      text eol=lf
+
+*.js   text eol=lf
+*.json text eol=lf
+*.htm  text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.md   text eol=lf
