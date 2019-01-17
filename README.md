@@ -67,7 +67,7 @@ Adds an event listener to the streamdeck instance.
 
 <br>  
 
-##### `streamdeck.once`  
+#### `streamdeck.once`  
 Alias for `streamdeck.on(event, handler, true)`
 
 |  Argument  |   Type   | Description                                                    |
@@ -130,7 +130,7 @@ Tell streamdeck to switch to a predefined profile
 #### `streamdeck.createContext`
 *`Background-Only`*
 
-Creates an untracked [`Context` instance](#context)
+Creates an untracked [`Context`](#context) instance
 
 | Argument  |  Type  | Description                                      |
 |-----------|:------:|--------------------------------------------------|
@@ -140,7 +140,7 @@ Creates an untracked [`Context` instance](#context)
 
 <br><br><br>
 ## Events
-All events are emitted with a single [`Event` instance](#event) argument against the root easy-streamdeck instance. That is, within event handlers, `this` refers to the streamdeck instance.
+All events are emitted with a single [`Event`](#event) instance argument against the root easy-streamdeck instance. That is, within event handlers, `this` refers to the streamdeck instance.
 
 
 #### `ready`
