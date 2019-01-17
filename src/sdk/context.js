@@ -91,7 +91,7 @@ class Context {
         });
     }
 
-    sendToPropertyInspector(data) {
+    sendToPlugin(data) {
         this.streamdeck.sendJSON({
             event: "showAlert",
             action: this.action,
