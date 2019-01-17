@@ -171,7 +171,18 @@ Object.defineProperties(streamdeck, {
             if ($layer === 'propertyinspector') {
                 Object.defineProperties(streamdeck, {
                     contextId: {enumerable: true, value: context.context},
-                    actionId:  {enumerable: true, value: context.action}
+                    actionId:  {enumerable: true, value: context.action},
+                    sendToPlugin: {
+                        enumerable: true,
+                        value: function sendToPlugin(data) {
+                            streamdeck.sendJSON({
+                                event: "sendToPlugin",
+                                action: context.action,
+                                context: streamdeck.uuid,
+                                payload: data
+                            });
+                        }
+                    }
                 });
 
             } else {

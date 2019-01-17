@@ -30,8 +30,8 @@ class Context {
         this.streamdeck = streamdeck;
 
         // todo: validate action and uuid
-        this.action     = action;
-        this.uuid       = uuid;
+        this.action = action;
+        this.uuid   = uuid;
     }
 
     setTitle(title, target) {
@@ -53,7 +53,6 @@ class Context {
     setImage(image, target) {
         // todo: validate image
 
-
         let payload = {target: validateTarget(target)};
         if (image != null) {
             payload.image = image;
@@ -63,6 +62,39 @@ class Context {
             context: this.uuid,
             payload: payload
         });
+    }
+
+    setImageFromUrl(url, target) {
+        if (!util.isString(url, {notEmpty: true})) {
+            throw new TypeError('invalid url');
+        }
+
+        target = validateTarget(target);
+
+        let self = this,
+            image = new Image();
+
+        image.onload = function () {
+
+            // create canvas
+            let canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+
+            // draw image on canvas
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0);
+
+            // convert canvas to png data url and use .setImage
+            self.setImage(canvas.toDataURL("image/png"), target);
+        };
+        image.onerror = function () {
+            image.onerror = null;
+            image.onload = null;
+            image = null;
+            console.error('[context#setImageFromUrl] failed to load image:', url);
+        };
+        image.src = url;
     }
 
     showAlert() {
@@ -100,11 +132,13 @@ class Context {
         });
     }
 
-    /*
-    setSettings() {
-        // Need to figure out how this operates before handling it
+    setSettings(data) {
+        this.streamdeck.sendJSON({
+            event: "setSettings",
+            context: this.uuid,
+            payload: data
+        });
     }
-    */
 
     toSafe() {
 

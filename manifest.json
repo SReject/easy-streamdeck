@@ -1,8 +1,9 @@
 {
-    "Name": "easy-streamdeck Example",
+    "Name": "easy-streamdeck Example: Number Display",
     "Author": "SReject",
-    "Description": "Example plugin for using easy-streamdeck",
+    "Description": "Recreation of Elgato's NumberDisplay plugin using easy-streamdeck",
     "URL": "https://github.com/SReject/easy-streamdeck",
+    "Icon": "./example/icons/pluginIcon",
     "Version": "1.0.0",
     "OS": [
         {
@@ -17,17 +18,18 @@
 
     "Actions": [
         {
-            "Name": "Trigger ActionGroup",
+            "Icon": "./example/icons/actionIcon",
+            "Name": "Number Display",
             "States": [
                 {
-                    "Title": "Test",
+                    "Image": "./example/icons/actionDefaultImage",
                     "TitleAlignment": "middle",
                     "FontSize": "16"
                 }
             ],
             "SupportedInMultiActions": false,
-            "ToolTip": "This is a test",
-            "UUID": "com.crowbartools.easystreamdeck.action"
+            "Tooltip": "This action displays a value set by the user",
+            "UUID": "com.srject.easystreamdeck.numberdisplay"
         }
     ],
 

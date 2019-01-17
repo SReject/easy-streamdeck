@@ -22,9 +22,6 @@ After building, include the easy-streamdeck.js file as the first resource to be 
 <!-- other scripts that depend on it -->
 ```
 
-
-
-
 # API
 When loaded in a browser-esq enviornment, easy-streamdeck is added to the global scope as `streamdeck` otherwise it is exported via `module.exports`
 
