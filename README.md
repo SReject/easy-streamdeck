@@ -27,46 +27,92 @@ When loaded in a browser-esq enviornment, easy-streamdeck is added to the global
 
 # API
 
+
+
+
 ## Properties  
 Some properties are only available after `streamdeck.start()` is invoked
 
-### `streamdeck.ready` as Boolean - Read-Only
-`true` if streamdeck is ready, otherwise returns `false`
+#### `streamdeck.ready`
+*`Boolean`, `Read-Only`*  
 
-### `streamdeck.port` as Number - Read-Only
+`true` if streamdeck is ready  
+`false` if streamdeck is not ready 
+
+
+#### `streamdeck.port` 
+*`Number`, `Read-Only`*  
+
 The websocket port number to be used when connecting to Stream Deck's software
 
-### `streamdeck.uuid` as String - Read-Only
+
+#### `streamdeck.uuid`
+*`String`, `Read-only`*
+
 The current context's UUID
 
-### `streamdeck.layer` as String - Read-Only
+
+#### `streamdeck.layer`
+*`String`, `Read-Only`*
+
 The layer of which the current instance is running.  
 
 Will be `plugin` or `propertyinspector`
 
-### `streamdeck.host` as Object - Read-Only
+
+#### `streamdeck.host`
+*`Object`, `Read-Only`*
+
 Information related to the host environment
 
-### `streamdeck.host.platform` as String - Read-Only
-The platform: `windows` or `mac`
 
-### `streamdeck.host.language` as String - Read-Only
+#### `streamdeck.host.platform`
+*`String`, `Read-Only`*  
+
+The platform; `windows` or `mac`
+
+
+#### `streamdeck.host.language`
+*`String`, `Read-Only`*
+
 The language Stream Deck's software is using: `en`, `es`, etc
 
-### `streamdeck.host.version` as String - Read-Only
+
+#### `streamdeck.host.version`
+*`String`, `Read-Only`*
+
 Stream Deck software's version
 
-### `streamdeck.devices` as Array<Device> - Read-Only
-List of the currently known connected Stream Deck devices
 
-### `streamdeck.contexts` as Array<Context> - Read-Only - Background Only
+#### `streamdeck.devices`
+*`Array<Devices>`, `Read-Only`*
+
+List of the currently known connected Stream Deck [devices](#device-instance)
+
+
+#### `streamdeck.contexts`
+*`Array<Context>`, `Read-Only`, `Background-Only`*
+
 List of known buttons related to the plugin
+
+
+#### `streamdeck.contextId`
+*`String`, `Read-Only`, `PropertyInspector-Only`*
+
+The contextId for the property inspector
+
+
+#### `streamdeck.actionId`
+*`String`, `Read-Only`, `PropertyInspector-Only`*
+
+The actionId for the property inspector
+
 
 
 
 ## Methods
 
-### `streamdeck.on(event, handler, once)`  
+#### `streamdeck.on`  
 Adds an event listener to the streamdeck instance
 
 | Argument  |   Type   | Description                                                    |
@@ -76,7 +122,7 @@ Adds an event listener to the streamdeck instance
 | `once`    |  boolean | If true the handler will be removed after the event is emitted |
 
 
-### `streamdeck.off(event, handler, once)`  
+#### `streamdeck.off`  
 Adds an event listener to the streamdeck instance.
 
 | Argument\* |   Type   | Description                                                    |
@@ -88,27 +134,51 @@ Adds an event listener to the streamdeck instance.
 \*: Arguments must match those used to create the listener exactly
 
 
-### `streamdeck.once(event, handler)`  
+##### `streamdeck.once`  
 Alias for `streamdeck.on(event, handler, true)`
 
+| Argument\* |   Type   | Description                                                    |
+|------------|:--------:|----------------------------------------------------------------|
+| `event`    |  string  | The event to listen for                                        |
+| `handler`  | function | The callback to handle the event                               |
 
-### `streamdeck.nonce(event, handler)`  
+
+#### `streamdeck.nonce`  
 Alias for `streamdeck.off(event, handler, true)`
 
-### `streamdeck.createContext(action, contextId)` - Background layer only
-Creates an untracked context instance.
+| Argument\* |   Type   | Description                                                    |
+|------------|:--------:|----------------------------------------------------------------|
+| `event`    |  string  | The event to listen for                                        |
+| `handler`  | function | The callback to handle the event                               |
 
 
-| Argument\* |  Type  | Description                                      |
-|------------|:------:|--------------------------------------------------|
-| `action`   | string | The action id of which to create the context for |
-| `context`  | string | The context's opaque value                       |
+#### `streamdeck.openUrl`
+Tell streamdeck to open the specified url in the native default browser
+
+| Argument\* |  Type  | Description                |
+|------------|:------:|----------------------------|
+| `url`      | string | The URL to open            |
 
 
-See ContextInstance for more inforation
+#### `streamdeck.send`
+Sends the data to Stream Deck's software
+
+| Argument\* |  Type  | Description                |
+|------------|:------:|----------------------------|
+| `data`     | string | The data to send           |
 
 
-### `streamdeck.switchToProfile(profileName)` - Background layer only  
+#### `streamdeck.sendJSON`
+Uses `JSON.stringify` and then sends the stringified data to Stream Deck's software
+
+| Argument\* |  Type  | Description                |
+|------------|:------:|----------------------------|
+| `data`     | *any*  | The data to send           |
+
+
+#### `streamdeck.switchToProfile`
+*`Background-Only`*
+
 Tell streamdeck to switch to a predefined profile
 
 | Argument\*    |  Type  | Description                                                           |
@@ -116,12 +186,15 @@ Tell streamdeck to switch to a predefined profile
 | `profileName` | string | The exact profile name as it is defined in the plugin's manifest.json |
 
 
-### `streamdeck.openUrl(url)`
-Tell streamdeck to open the specified url in the native default browser
+#### `streamdeck.createContext`
+*`Background-Only`*
 
-| Argument\* |  Type  | Description                |
-|------------|:------:|----------------------------|
-| `url`      | string | The URL to open            |
+Creates an untracked [context](#context-instance) instance.
+
+| Argument\* |  Type  | Description                                      |
+|------------|:------:|--------------------------------------------------|
+| `action`   | string | The action id of which to create the context for |
+| `context`  | string | The context's opaque value                       |
 
 
 # Rest of documentation to-do
