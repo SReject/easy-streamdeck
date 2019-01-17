@@ -28,95 +28,20 @@ After building, include the easy-streamdeck.js file as the first resource to be 
 # API
 When loaded in a browser-esq enviornment, easy-streamdeck is added to the global scope as `streamdeck` otherwise it is exported via `module.exports`
 
-## Properties  
-Some properties are only available after `streamdeck.start()` is invoked
 
-#### `streamdeck.ready`
-*`Boolean`, `Read-Only`*  
+| Property\*      | Type                          | Description                                                      |
+|-----------------|:-----------------------------:|------------------------------------------------------------------|
+| `ready`         | Boolean                       | `true` if the library is ready, `false` otherwise                |
+| `port`          | Number                        | The port that will be used to connect to Stream Deck's software  |
+| `uuid`          | String                        | The current context's UUID/opaqueValue                           |
+| `layer`         | String                        | The current context's layer: `"plugin"` or `"propertyinspector"` |
+| `host`          | [`Host`](#host)               | Data related to the host                                         |
+| `devices`       | Array\<[`Device`](#device)\>  | Tracked connected devices                                        |
+| `contexts`      | Array\<[`Context`](#context\> | Tracked buttons related to the plugin                            |
+| `contextId`     | String                        | The context's id (propertyinspector layer only)                  |
+| `actionId`      | String                        | The context's actionId (propertyinspector layer only)            |
 
-`true` if streamdeck is ready  
-`false` if streamdeck is not ready  
-
-<br>  
-
-#### `streamdeck.port` 
-*`Number`, `Read-Only`*  
-
-The websocket port number to be used when connecting to Stream Deck's software  
-
-<br>  
-
-#### `streamdeck.uuid`
-*`String`, `Read-only`*
-
-The current context's UUID  
-
-<br>  
-
-#### `streamdeck.layer`
-*`String`, `Read-Only`*
-
-The layer of which the current instance is running.  
-
-Will be `plugin` or `propertyinspector`  
-
-<br>  
-
-#### `streamdeck.host`
-*`Object`, `Read-Only`*
-
-Information related to the host environment  
-
-<br>  
-
-#### `streamdeck.host.platform`
-*`String`, `Read-Only`*  
-
-The platform; `windows` or `mac`  
-
-<br>  
-
-#### `streamdeck.host.language`
-*`String`, `Read-Only`*
-
-The language Stream Deck's software is using: `en`, `es`, etc  
-
-<br>  
-
-#### `streamdeck.host.version`
-*`String`, `Read-Only`*
-
-Stream Deck software's version  
-
-<br>  
-
-#### `streamdeck.devices`
-*`Array<Devices>`, `Read-Only`*
-
-List of the currently known connected Stream Deck [device instances](#device)  
-
-<br>  
-
-#### `streamdeck.contexts`
-*`Array<Context>`, `Read-Only`, `Background-Only`*
-
-List of known buttons related to the plugin  
-
-<br>  
-
-#### `streamdeck.contextId`
-*`String`, `Read-Only`, `PropertyInspector-Only`*
-
-The contextId for the property inspector  
-
-<br>  
-
-#### `streamdeck.actionId`
-*`String`, `Read-Only`, `PropertyInspector-Only`*
-
-The actionId for the property inspector
-
-
+\*: Properties are read-only
 
 <br><br><br>
 ## Methods
@@ -413,6 +338,17 @@ If called, no other event handlers will be called for the emitted event instance
 The data accompanying the event; the value varies dependant on the event being emitted  
 
 <br><br><br>
+## Host
+Describes streamdeck's host enviornment
+
+| Property   | Type   | Description                                          |
+|------------|:------:|------------------------------------------------------|
+| `language` | String | The current language Stream Deck's software is using |
+| `platform` | String | The platform; `"windows"` or `"mac"`                 |
+| `version`  | String | Stream Deck's software version                       |  
+
+<br>
+
 ## Device 
 Describes a streamdeck hardware device
 
