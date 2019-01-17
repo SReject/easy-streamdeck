@@ -39,7 +39,8 @@ When loaded in a browser-esq enviornment, easy-streamdeck is added to the global
 | `devices`       | Array\<[`Device`](#device)\>   | Tracked connected devices                                        |
 | `contexts`      | Array\<[`Context`](#context)\> | Tracked buttons related to the plugin                            |
 | `contextId`     | String                         | The context's id (propertyinspector layer only)                  |
-| `actionId`      | String                         | The context's actionId (propertyinspector layer only)            |  
+| `actionId`      | String                         | The context's actionId (propertyinspector layer only)            |
+
 \*: Properties are read-only
 
 <br><br><br>
@@ -63,7 +64,8 @@ Adds an event listener to the streamdeck instance.
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
 | `handler`  | function | The callback to handle the event                               |
-| `once`     |  boolean | If true the handler will be removed after the event is emitted |  
+| `once`     |  boolean | If true the handler will be removed after the event is emitted |
+
 \*: Arguments must match those used to create the listener exactly  
 
 <br>  
@@ -84,7 +86,8 @@ Alias for `streamdeck.off(event, handler, true)`
 | Argument\* |   Type   | Description                                                    |
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
-| `handler`  | function | The callback to handle the event                               |  
+| `handler`  | function | The callback to handle the event                               |
+
 \*: Arguments must match those used to create the listener exactly  
 
 <br>  
@@ -342,7 +345,8 @@ Describes streamdeck's host enviornment
 |------------|:------:|------------------------------------------------------|
 | `language` | String | The current language Stream Deck's software is using |
 | `platform` | String | The platform; `"windows"` or `"mac"`                 |
-| `version`  | String | Stream Deck's software version                       |  
+| `version`  | String | Stream Deck's software version                       |
+
 \*: Properties are read-only
 
 <br>
@@ -355,7 +359,8 @@ Describes a streamdeck hardware device
 | `id`      | String | An opaque value used to reference the device |
 | `type`    | Number | *unknown*                                    |
 | `columns` | Number | The number of button columns the device has  |
-| `rows`    | Number | The number of button rows the device has     |  
+| `rows`    | Number | The number of button rows the device has     |
+
 \*: Properties are read-only
 
 <br>
@@ -371,7 +376,8 @@ Describes a context's title
 | `style`     | String  | *unknown*                                                                           |
 | `underline` | Boolean | `true` if the text is to be underlined; `false` otherwise                           |
 | `color`     | String  | Color used to display the title as a hex color value                                |
-| `alignment` | String  | `top`, `middle`, or `bottom` indicating how the title text is aligned on the button |  
+| `alignment` | String  | `top`, `middle`, or `bottom` indicating how the title text is aligned on the button |
+
 \*: Properties are read-only
 
 <br>
@@ -390,6 +396,8 @@ Describes a context
 | `settings`      | Object              | Settings stored for the context\*                                 |
 | `state`         | Number              | The current state of the button                                   |
 | `inMultiAction` | Boolean             | `true` the the context is part of a multiaction otherwise `false` |
+
+\*: Properties are read-only
 
 <br>
 
