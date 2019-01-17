@@ -4,7 +4,66 @@
         <title>easy-streamDeck - Action Example</title>
         <meta charset="utf-8">
         <script src="./easy-streamdeck.js"></script>
-        <script src="./action.js"></script>
+        <link rel="stylesheet" href="sdpi.css">
     </head>
-    <body></body>
+    <body>
+        <div class="sdpi-wrapper">
+            <div type="select" class="sdpi-item">
+                <div class="sdpi-item-label">Change Value</div>
+                <select class="sdpi-item-value select" id="value-select">
+                    <option selected value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+            </div>
+            <div type="range" class="sdpi-item">
+                <div class="sdpi-item-label">Change Value</div>
+                <div class="sdpi-item-value range">
+                    <input id="value-slider" type="range" min="0" max="9" value="0">
+                </div>
+            </div>
+            <div type="select" class="sdpi-item">
+                <div class="sdpi-item-label">Background</div>
+                <select class="sdpi-item-value select" id="background-select">
+                    <option selected value="actionDefaultImage">Original Background</option>
+                    <option value="actionDefaultImage_red">Red Background</option>
+                    <option value="actionDefaultImage_blue">Blue Background</option>
+                    <option value="actionDefaultImage_yellow">Yellow Background</option>
+                </select>
+            </div>
+        </div>
+        <script>
+
+        streamdeck.on('ready', function () {
+            function sendToPlugin(key, value) {
+                let data = {};
+                data[key] = value;
+                streamdeck.sendToPlugin(data);
+            }
+
+            let eleValueSelect = document.getElementById('value-select'),
+                eleValueSlider = document.getElementById('value-slider'),
+                eleBgSelect    = document.getElementById('background-select');
+
+            eleValueSelect.addEventListener('change', function (evt) {
+                sendToPlugin('setValue', eleValueSlider.value = eleValueSelect.value);
+            });
+
+            eleValueSlider.addEventListener('change', function (evt) {
+                sendToPlugin('setValue', eleValueSelect.value = eleValueSlider.value);
+            });
+            
+            eleBgSelect.addEventListener('change', function () {
+                sendToPlugin('background-image', eleBgSelect.value);
+            });
+        });
+        </script>
+    </body>
 </html>

@@ -4,7 +4,69 @@
         <title>easy-streamdeck - Plugin Example</title>
         <meta charset="utf-8">
         <script src="./easy-streamdeck.js"></script>
-        <script src="./background.js"></script>
     </head>
-    <body></body>
+    <body>
+        <script>
+        let settingsCache = {};
+
+        streamdeck.on('streamdeck:button:appear', function (evt) {
+            let context = evt.data,
+                keyPressCounter = 0;
+
+            if (context.settings != null && context.settings.hasOwnProperty('keyPressCounter')) {
+                keyPressCounter = context.settings.keyPressCounter;
+            }
+
+            settingsCache[context.uuid] = {'keyPressCounter': keyPressCounter};
+            context.setTitle("" + keyPressCounter);
+        });
+
+        streamdeck.on('streamdeck:keypress:up', function (evt) {
+
+            let context = evt.data,
+                keyPressCounter,
+                updatedSettings;
+
+            keyPressCounter = 0;
+
+            if (context.settings != null && context.settings.hasOwnProperty('keyPressCounter')) {
+                keyPressCounter = context.settings.keyPressCounter;
+            }
+
+            keyPressCounter++;
+            keyPressCounter = keyPressCounter % 10;
+
+            updatedSettings = {'keyPressCounter': keyPressCounter};
+            settingsCache[context.uuid] = updatedSettings;
+
+            context.setSettings(updatedSettings);
+            context.setTitle("" + keyPressCounter);
+
+        });
+
+        streamdeck.on('streamdeck:messagerelay', function (evt) {
+
+            let context = evt.data.context,
+                jsonPayload = evt.data.message;
+
+            if (jsonPayload.hasOwnProperty('setValue')) {
+                let newValue = jsonPayload.setValue;
+
+                if (settingsCache[context.uuid] == null) {
+                    settingsCache[context.uuid] = {};
+                }
+
+                settingsCache[context.uuid].keyPressCounter = newValue;
+
+                context.setSettings({'keyPressCounter': newValue});
+                context.setTitle("" + newValue);
+            }
+
+            if (jsonPayload.hasOwnProperty('background-image')) {
+                let imageName = jsonPayload['background-image'];
+                context.setImageFromUrl(`./icons/${imageName}.png`);
+            }
+        });
+        </script>
+    </body>
 </html>
