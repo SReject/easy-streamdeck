@@ -27,9 +27,6 @@ When loaded in a browser-esq enviornment, easy-streamdeck is added to the global
 
 # API
 
-
-
-
 ## Properties  
 Some properties are only available after `streamdeck.start()` is invoked
 
@@ -150,7 +147,7 @@ Adds an event listener to the streamdeck instance.
 ##### `streamdeck.once`  
 Alias for `streamdeck.on(event, handler, true)`
 
-| Argument\* |   Type   | Description                                                    |
+|  Argument  |   Type   | Description                                                    |
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
 | `handler`  | function | The callback to handle the event                               |  
@@ -163,7 +160,9 @@ Alias for `streamdeck.off(event, handler, true)`
 | Argument\* |   Type   | Description                                                    |
 |------------|:--------:|----------------------------------------------------------------|
 | `event`    |  string  | The event to listen for                                        |
-| `handler`  | function | The callback to handle the event                               |  
+| `handler`  | function | The callback to handle the event                               |
+
+\*: Arguments must match those used to create the listener exactly  
 
 <br>  
 
@@ -218,7 +217,7 @@ Creates an untracked [context instance](#context)
 
 <br><br><br>
 ## Events
-All events are emitted with a single [event instance](#event) argument
+All events are emitted with a single [event instance](#event) argument against the root easy-streamdeck instance. That is, within event handlers, `this` refers to the streamdeck instance.
 
 
 #### `ready`
@@ -227,30 +226,71 @@ Emitted when easy-streamdeck is ready
 <br>  
 
 #### `websocket:connect`  
+Emitted when the underlying websocket connection to the streamdeck software connects  
+
+| `<event.data>` Property | Type | Description |
+|-------------------------|:----:|-------------|
+| *none*                  |      |             |  
 
 <br>  
 
 #### `websocket:message`  
+Emitted when a message is received from the streamdeck software websocket connection.  
+Note that this event is NOT emitted if the message contains a streamdeck event    
+
+| `<event.data>` Property |  Type  | Description      |
+|-------------------------|:------:|------------------|
+| \-                      | String | The message data |  
 
 <br>  
 
 #### `websocket:close`  
+Emitted when the underlying websocket connection to the streamdeck software connects  
+
+| `<event.data>` Property |  Type  | Description                               |
+|-------------------------|:------:|-------------------------------------------|
+| `code`                  | Number | The close code                            |
+| `reason`                | String | A plain text decription of the close code |  
 
 <br>  
 
 #### `websocket:error`  
+Emitted when the underlying websocket connection suffers from either a protocol or connection error.  
 
-<br>  
-
-#### `streamdeck:keypress:up`  
+| `<event.data>` Property | Type | Description                                         |
+|-------------------------|:----:|-----------------------------------------------------|
+| *none*                  |      | No information is provided as to what error occured |  
 
 <br>  
 
 #### `streamdeck:keypress:down`  
+Emitted when a button is pressed on the Stream Deck hardware  
+
+| `<event.data>` Property |        Type         | Description                                       |
+|-------------------------|:-------------------:|---------------------------------------------------|
+| `context`               | [Context](#context) | The context instance that the event took place on |
+| `device`                | [Device](#device)   | The streamdeck device the event took place on     |  
+
+<br>  
+
+#### `streamdeck:keypress:up`  
+Emitted when a pressed button is released on the Stream Deck hardware  
+
+| `<event.data>` Property |        Type         | Description                                       |
+|-------------------------|:-------------------:|---------------------------------------------------|
+| `context`               | [Context](#context) | The context instance that the event took place on |
+| `device`                | [Device](#device)   | The streamdeck device the event took place on     |  
 
 <br>  
 
 #### `streamdeck:keypress`  
+Emitted when a pressed button is released on the Stream Deck hardware  
+
+| `<event.data>` Property |        Type         | Description                                       |
+|-------------------------|:-------------------:|---------------------------------------------------|
+| `event`                 | String              | The keypress event that took place                |
+| `context`               | [Context](#context) | The context instance that the event took place on |
+| `device`                | [Device](#device)   | The streamdeck device the event took place on     |  
 
 <br>  
 
@@ -289,9 +329,15 @@ Emitted when easy-streamdeck is ready
 
 
 ## Event  
+Passed as the only argument to event handlers when an event is emitted
 
-<br>
+#### `<event>.stop()`
+If called, no other event handlers will be called for the emitted event instance
 
+#### `<event>.data`
+The data accompanying the event; the value varies dependant on the event being emitted  
+
+<br><br><br>
 ## Device  
 
 <br>
