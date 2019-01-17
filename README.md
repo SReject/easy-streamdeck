@@ -169,7 +169,7 @@ Alias for `streamdeck.off(event, handler, true)`
 #### `streamdeck.openUrl`
 Tell streamdeck to open the specified url in the native default browser
 
-| Argument\* |  Type  | Description                |
+| Argument   |  Type  | Description                |
 |------------|:------:|----------------------------|
 | `url`      | string | The URL to open            |  
 
@@ -178,7 +178,7 @@ Tell streamdeck to open the specified url in the native default browser
 #### `streamdeck.send`
 Sends the data to Stream Deck's software
 
-| Argument\* |  Type  | Description                |
+| Argument   |  Type  | Description                |
 |------------|:------:|----------------------------|
 | `data`     | string | The data to send           |  
 
@@ -187,7 +187,7 @@ Sends the data to Stream Deck's software
 #### `streamdeck.sendJSON`
 Uses `JSON.stringify` and then sends the stringified data to Stream Deck's software
 
-| Argument\* |  Type  | Description                |
+| Argument   |  Type  | Description                |
 |------------|:------:|----------------------------|
 | `data`     | *any*  | The data to send           |  
 
@@ -198,7 +198,7 @@ Uses `JSON.stringify` and then sends the stringified data to Stream Deck's softw
 
 Tell streamdeck to switch to a predefined profile
 
-| Argument\*    |  Type  | Description                                                           |
+| Argument      |  Type  | Description                                                           |
 |---------------|:------:|-----------------------------------------------------------------------|
 | `profileName` | string | The exact profile name as it is defined in the plugin's manifest.json |  
 
@@ -209,10 +209,10 @@ Tell streamdeck to switch to a predefined profile
 
 Creates an untracked [context instance](#context)
 
-| Argument\* |  Type  | Description                                      |
-|------------|:------:|--------------------------------------------------|
-| `action`   | string | The action id of which to create the context for |
-| `context`  | string | The context's opaque value                       |
+| Argument  |  Type  | Description                                      |
+|-----------|:------:|--------------------------------------------------|
+| `action`  | string | The action id of which to create the context for |
+| `context` | string | The context's opaque value                       |
 
 
 <br><br><br>
@@ -240,7 +240,7 @@ Note that this event is NOT emitted if the message contains a streamdeck event
 
 | `<event.data>` Property |  Type  | Description      |
 |-------------------------|:------:|------------------|
-| \-                      | String | The message data |  
+|                         | String | The message data |  
 
 <br>  
 
@@ -295,34 +295,80 @@ Emitted when a pressed button is released on the Stream Deck hardware
 <br>  
 
 #### `streamdeck:application:launch`  
+Emitted when a monitored application is launched
+
+| `<event.data>` Property |  Type  | Description              |
+|-------------------------|:------:|--------------------------|
+|                         | String | The application launched |  
 
 <br>  
 
 #### `streamdeck:application:terminate`  
+Emitted when a monitored application is terminated
+
+| `<event.data>` Property |  Type  | Description              |
+|-------------------------|:------:|--------------------------|
+|                         | String | The application launched |  
 
 <br>  
 
-#### `streamdeck:application`  
+#### `streamdeck:application`
+Emitted when a monitored application is launched or terminated  
+
+| `<event.data>` Property |  Type  | Description                    |
+|-------------------------|:------:|--------------------------------|
+| `event`                 | String | `"launched"` or `"terminated"` |
+| `application`           | String | The monitor application        |  
+
+<br>
+
+#### `streamdeck:button:appear`
+Emitted when a button related to the plugin will appear on the stream deck hardware  
+
+| `<event.data>` Property |  Type               | Description                         |
+|-------------------------|:-------------------:|-------------------------------------|
+|                         | [Context](#context) | The context instance for the button |
 
 <br>  
 
-#### `streamdeck:button:appear`  
+#### `streamdeck:button:titlechange`
+Emitted when a button's title parameters have changed 
+
+| `<event.data>` Property |  Type               | Description                           |
+|-------------------------|:-------------------:|---------------------------------------|
+| `context`               | [Context](#context) | The context instance for the button   |
+| `previousTitle`         | [Title](#title)     | The title before changes were applied |  
 
 <br>  
 
-#### `streamdeck:button:titlechange`  
+#### `streamdeck:button:disappear`
+Emitted when a button will not longer be displayed on the stream deck hardware
+
+| `<event.data>` Property |  Type               | Description                         |
+|-------------------------|:-------------------:|-------------------------------------|
+|                         | [Context](#context) | The context instance for the button |
 
 <br>  
 
-#### `streamdeck:button:disappear`  
+#### `streamdeck:button`
+Emitted when an event happens on a button
 
-<br>  
-
-#### `streamdeck:button`  
+| `<event.data>` Property |  Type               | Description                                                                   |
+|-------------------------|:-------------------:|-------------------------------------------------------------------------------|
+| `event`                 | String              | The event name                                                                |
+| `context`               | [Context](#context) | The context instance for the button                                           |
+| `previousTitle`         | [Title](#title)     | The title before changes were applied (only included with titlechange events) |  
 
 <br>  
 
 #### `streamdeck:messagerelay`
+Emitted when a message was sent from one layer to another
+
+| `<event.data>` Property |  Type               | Description                                                                                                              |
+|-------------------------|:-------------------:|--------------------------------------------------------------------------------------------------------------------------|
+| `message`               | String              | The message sent                                                                                                         |
+| `context`               | [Context](#context) | The context of the message sender (only included if the message was sent by the propertyInspector to the 'plugin' layer) |
+
 
 <br><br><br>
 # Structures
@@ -343,3 +389,9 @@ The data accompanying the event; the value varies dependant on the event being e
 <br>
 
 ## Context
+*todo*
+
+<br>
+
+## Title
+*todo*
