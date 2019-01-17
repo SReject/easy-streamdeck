@@ -22,10 +22,11 @@ After building, include the easy-streamdeck.js file as the first resource to be 
 <!-- other scripts that depend on it -->
 ```
 
-When loaded in a browser-esq enviornment, easy-streamdeck is added to the global scope as `streamdeck` otherwise it is exported
+
 
 
 # API
+When loaded in a browser-esq enviornment, easy-streamdeck is added to the global scope as `streamdeck` otherwise it is exported via `module.exports`
 
 ## Properties  
 Some properties are only available after `streamdeck.start()` is invoked
@@ -207,7 +208,7 @@ Tell streamdeck to switch to a predefined profile
 #### `streamdeck.createContext`
 *`Background-Only`*
 
-Creates an untracked [context instance](#context)
+Creates an untracked [`Context` instance](#context)
 
 | Argument  |  Type  | Description                                      |
 |-----------|:------:|--------------------------------------------------|
@@ -217,7 +218,7 @@ Creates an untracked [context instance](#context)
 
 <br><br><br>
 ## Events
-All events are emitted with a single [event instance](#event) argument against the root easy-streamdeck instance. That is, within event handlers, `this` refers to the streamdeck instance.
+All events are emitted with a single [`Event` instance](#event) argument against the root easy-streamdeck instance. That is, within event handlers, `this` refers to the streamdeck instance.
 
 
 #### `ready`
@@ -263,37 +264,6 @@ Emitted when the underlying websocket connection suffers from either a protocol 
 
 <br>  
 
-#### `streamdeck:keypress:down`  
-Emitted when a button is pressed on the Stream Deck hardware  
-
-| `<event.data>` Property |        Type         | Description                                       |
-|-------------------------|:-------------------:|---------------------------------------------------|
-| `context`               | [Context](#context) | The context instance that the event took place on |
-| `device`                | [Device](#device)   | The streamdeck device the event took place on     |  
-
-<br>  
-
-#### `streamdeck:keypress:up`  
-Emitted when a pressed button is released on the Stream Deck hardware  
-
-| `<event.data>` Property |        Type         | Description                                       |
-|-------------------------|:-------------------:|---------------------------------------------------|
-| `context`               | [Context](#context) | The context instance that the event took place on |
-| `device`                | [Device](#device)   | The streamdeck device the event took place on     |  
-
-<br>  
-
-#### `streamdeck:keypress`  
-Emitted when a pressed button is released on the Stream Deck hardware  
-
-| `<event.data>` Property |        Type         | Description                                       |
-|-------------------------|:-------------------:|---------------------------------------------------|
-| `event`                 | String              | The keypress event that took place                |
-| `context`               | [Context](#context) | The context instance that the event took place on |
-| `device`                | [Device](#device)   | The streamdeck device the event took place on     |  
-
-<br>  
-
 #### `streamdeck:application:launch`  
 Emitted when a monitored application is launched
 
@@ -315,59 +285,118 @@ Emitted when a monitored application is terminated
 #### `streamdeck:application`
 Emitted when a monitored application is launched or terminated  
 
-| `<event.data>` Property |  Type  | Description                    |
+| `<event.data>` Property | Type   | Description                    |
 |-------------------------|:------:|--------------------------------|
 | `event`                 | String | `"launched"` or `"terminated"` |
 | `application`           | String | The monitor application        |  
 
 <br>
 
+#### `streamdeck:device:connect`  
+Emitted when a streamdeck device is connected
+
+| `<event.data>` Property | Type                | Description              |
+|-------------------------|:-------------------:|--------------------------|
+|                         | [`Device`](#device) | The application launched |  
+
+<br>  
+
+#### `streamdeck:device:disconnect`  
+Emitted when a streamdeck device is disconnected
+
+| `<event.data>` Property | Type                | Description              |
+|-------------------------|:-------------------:|--------------------------|
+|                         | [`Device`](#device) | The application launched |  
+
+<br>  
+
+#### `streamdeck:device`
+Emitted when a monitored application is launched or terminated  
+
+| `<event.data>` Property | Type                | Description                   |
+|-------------------------|:-------------------:|-------------------------------|
+| `event`                 | String              | `"connect"` or `"disconnect"` |
+| `device`                | [`Device`](#device) | The device affected           |  
+
+<br>
+
+#### `streamdeck:keypress:down`  
+Emitted when a button is pressed on the Stream Deck hardware  
+
+| `<event.data>` Property | Type                  | Description                                       |
+|-------------------------|:---------------------:|---------------------------------------------------|
+| `context`               | [`Context`](#context) | The context instance that the event took place on |
+| `device`                | [`Device`](#device)   | The streamdeck device the event took place on     |  
+
+<br>  
+
+#### `streamdeck:keypress:up`  
+Emitted when a pressed button is released on the Stream Deck hardware  
+
+| `<event.data>` Property | Type                  | Description                                       |
+|-------------------------|:---------------------:|---------------------------------------------------|
+| `context`               | [`Context`](#context) | The context instance that the event took place on |
+| `device`                | [`Device`](#device)   | The streamdeck device the event took place on     |  
+
+<br>  
+
+#### `streamdeck:keypress`  
+Emitted when a pressed button is released on the Stream Deck hardware  
+
+| `<event.data>` Property | Type                  | Description                                       |
+|-------------------------|:---------------------:|---------------------------------------------------|
+| `event`                 | String                | The keypress event that took place                |
+| `context`               | [`Context`](#context) | The context instance that the event took place on |
+| `device`                | [`Device`](#device)   | The streamdeck device the event took place on     |  
+
+<br>  
+
 #### `streamdeck:button:appear`
 Emitted when a button related to the plugin will appear on the stream deck hardware  
 
-| `<event.data>` Property |  Type               | Description                         |
-|-------------------------|:-------------------:|-------------------------------------|
-|                         | [Context](#context) | The context instance for the button |
+| `<event.data>` Property | Type                  | Description                         |
+|-------------------------|:---------------------:|-------------------------------------|
+|                         | [`Context`](#context) | The context instance for the button |
 
 <br>  
 
 #### `streamdeck:button:titlechange`
 Emitted when a button's title parameters have changed 
 
-| `<event.data>` Property |  Type               | Description                           |
-|-------------------------|:-------------------:|---------------------------------------|
-| `context`               | [Context](#context) | The context instance for the button   |
-| `previousTitle`         | [Title](#title)     | The title before changes were applied |  
+| `<event.data>` Property | Type                  | Description                           |
+|-------------------------|:---------------------:|---------------------------------------|
+| `context`               | [`Context`](#context) | The context instance for the button   |
+| `previousTitle`         | [`Title`](#title)     | The title before changes were applied |  
 
 <br>  
 
 #### `streamdeck:button:disappear`
 Emitted when a button will not longer be displayed on the stream deck hardware
 
-| `<event.data>` Property |  Type               | Description                         |
-|-------------------------|:-------------------:|-------------------------------------|
-|                         | [Context](#context) | The context instance for the button |
+| `<event.data>` Property | Type                  | Description                         |
+|-------------------------|:---------------------:|-------------------------------------|
+|                         | [`Context`](#context) | The context instance for the button |
 
 <br>  
 
 #### `streamdeck:button`
 Emitted when an event happens on a button
 
-| `<event.data>` Property |  Type               | Description                                                                   |
-|-------------------------|:-------------------:|-------------------------------------------------------------------------------|
-| `event`                 | String              | The event name                                                                |
-| `context`               | [Context](#context) | The context instance for the button                                           |
-| `previousTitle`         | [Title](#title)     | The title before changes were applied (only included with titlechange events) |  
+| `<event.data>` Property | Type                  | Description                                                                   |
+|-------------------------|:---------------------:|-------------------------------------------------------------------------------|
+| `event`                 | String                | The event name                                                                |
+| `context`               | [`Context`](#context) | The context instance for the button                                           |
+| `previousTitle`         | [`Title`](#title)     | The title before changes were applied (only included with titlechange events) |  
 
 <br>  
 
 #### `streamdeck:messagerelay`
 Emitted when a message was sent from one layer to another
 
-| `<event.data>` Property |  Type               | Description                                                                                                              |
-|-------------------------|:-------------------:|--------------------------------------------------------------------------------------------------------------------------|
-| `message`               | String              | The message sent                                                                                                         |
-| `context`               | [Context](#context) | The context of the message sender (only included if the message was sent by the propertyInspector to the 'plugin' layer) |
+| `<event.data>` Property | Type                  | Description                                                                                                                   |
+|-------------------------|:---------------------:|-------------------------------------------------------------------------------------------------------------------------------|
+| `message`               | String                | The message sent                                                                                                              |
+| `context`               | [`Context`](#context) | The context of the message sender (only included if the message was sent by a PropertyInspector instance to the plugin layer) |
 
 
 <br><br><br>
@@ -384,14 +413,53 @@ If called, no other event handlers will be called for the emitted event instance
 The data accompanying the event; the value varies dependant on the event being emitted  
 
 <br><br><br>
-## Device  
+## Device 
+Describes a streamdeck hardware device
 
-<br>
-
-## Context
-*todo*
+| Property  | Type   | Description                                  |
+|-----------|:------:|----------------------------------------------|
+| `id`      | String | An opaque value used to reference the device |
+| `type`    | Number | *unknown*                                    |
+| `columns` | Number | The number of button columns the device has  |
+| `rows`    | Number | The number of button rows the device has     |  
 
 <br>
 
 ## Title
-*todo*
+Describes a context's title
+
+| Property    | Type    | Description                                                                         |
+|-------------|:-------:|-------------------------------------------------------------------------------------|
+| `shown`     | Boolean | Indicates if the title is shown                                                     |
+| `text`      | String  | The title text                                                                      |
+| `font`      | String  | The font used to display the title text                                             |
+| `style`     | String  | *unknown*                                                                           |
+| `underline` | Boolean | `true` if the text is to be underlined; `false` otherwise                           |
+| `color`     | String  | Color used to display the title as a hex color value                                |
+| `alignment` | String  | `top`, `middle`, or `bottom` indicating how the title text is aligned on the button |
+
+<br>
+
+## Context
+Describes a context
+
+| Property        | Type                | Description
+|-----------------|:-------------------:|-------------------------------------------------------------------|
+| `action`        | String              | Action id associated with the context                             |
+| `uuid`          | String              | An opaque value identifying the context                           |
+| `column`        | Number              | The column the button/context resides                             |
+| `row`           | Number              | The row the button/context resides                                |
+| `device`        | [`Device`](#deivce) | The device the context is assoicated with                         |
+| `title`         | [`Title`](#title)   | The context's title                                               |
+| `settings`      | Object              | Settings stored for the context\*                                 |
+| `state`         | Number              | The current state of the button                                   |
+| `inMultiAction` | Boolean             | `true` the the context is part of a multiaction otherwise `false` |
+
+<br>
+
+#### `<Context>.setTitle`
+#### `<Context>.setImage`
+#### `<Context>.showAlert`
+#### `<Context>.showOk`
+#### `<Context>.setState`
+#### `>Context>.sendToPlugin`
