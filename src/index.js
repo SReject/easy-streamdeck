@@ -2,20 +2,22 @@ const util       = require('./misc/util.js');
 const Emitter    = require('./misc/emitter.js');
 const Connection = require('./sdk/connection.js');
 const Context    = require('./sdk/context.js');
-const onMessage  = require('./sdk/onmessage.js');
+const messages   = require('./sdk/messages.js');
 
 
 
 const streamdeck = new Emitter();
+
 
 let $ready = false,
     $port,
     $uuid,
     $layer,
     $host,
-    $devices = {},
-    $contexts = {},
-    $conn = new Connection();
+    $devices   = {},
+    $contexts  = {},
+    $onmessage = messages(streamdeck, $devices, $contexts),
+    $conn      = new Connection();
 
 // Members common to all layers
 Object.defineProperties(streamdeck, {
@@ -222,8 +224,10 @@ Object.defineProperties(streamdeck, {
                 });
             }
 
+            $onmessage.init();
+
             // start connecting
-            $conn.on('message', onMessage(streamdeck, $devices, $contexts));
+            $conn.on('message', $onmessage);
             $conn.on('message', function (evt) {
                 streamdeck.emit('websocket:message', evt.data);
             });

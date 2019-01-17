@@ -123,13 +123,15 @@ class Context {
         });
     }
 
-    sendToPlugin(data) {
-        this.streamdeck.sendJSON({
-            event: "showAlert",
-            action: this.action,
-            context: this.uuid,
-            payload: data
-        });
+    send(data) {
+        if (!util.isString(data)) {
+            this.streamdeck.sendJSON({
+                event: "sendToPropertyInspector",
+                action: this.action,
+                context: this.uuid,
+                payload: data
+            });
+        }
     }
 
     setSettings(data) {
