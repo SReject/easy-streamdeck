@@ -500,12 +500,14 @@ Registers a Cross-Layer method handler.
 | `handler`   | Function | The handler for the method.                            |
 
 
+<br>
+
+If the handler needs to an asyncronous operation it should return a promise that is fulfilled once the operation is complete. Otherwise the return value is assumed to be the result.  
+
 | `handler` Arguments | Type                  | Description                                                                       |
 |---------------------|:---------------------:|-----------------------------------------------------------------------------------|
 | `context`           | [`Context`](#context) | The context that invoked the method (not included in the PropertyInspector layer) |
 | `...`               | *any*                 | The argumensts specified when the method was invoked                              |
-
-If the handler needs to an asyncronous operation it should return a promise that is fulfilled once the operation is complete. Otherwise the return value is assumed to be the result.  
 
 <br>
 
@@ -517,7 +519,9 @@ Unregisters a Cross-Layer method handler.
 | `method`    | String   | The name of the method to be handled by the registrant |
 | `handler`   | Function | The handler for the method.                            |
 
-\*: Both arguments must exactly match values given when the method was registered.
+\*: Both arguments must exactly match values given when the method was registered.  
+
+<br>
 
 
 #### `<context>.notify`
