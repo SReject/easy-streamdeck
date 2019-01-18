@@ -502,7 +502,7 @@ Registers a Cross-Layer method handler.
 
 <br>
 
-If the handler needs to an asyncronous operation it should return a promise that is fulfilled once the operation is complete. Otherwise the return value is assumed to be the result.  
+If the `handler` function needs to do an asyncronous operation it should return a `Promise` that is fulfilled once the operation is complete. Otherwise the return value is assumed to be the result.  
 
 | `handler` Arguments | Type                  | Description                                                                       |
 |---------------------|:---------------------:|-----------------------------------------------------------------------------------|
