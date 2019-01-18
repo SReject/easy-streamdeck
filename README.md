@@ -131,7 +131,7 @@ Sends the data to Stream Deck's software
 <br>  
 
 #### `streamdeck.sendJSON`
-Uses `JSON.stringify` and then sends the stringified data to Stream Deck's software
+Uses `JSON.stringify` and then sends the data to Stream Deck's software
 
 | Argument   |  Type  | Description                |
 |------------|:------:|----------------------------|
@@ -140,7 +140,9 @@ Uses `JSON.stringify` and then sends the stringified data to Stream Deck's softw
 <br>
 
 #### `streamdeck.sendToPlugin`
-Uses `JSON.stringify and then sends the data to the background layer 
+*`PropertyInspector-only`*  
+
+Uses `JSON.stringify` and then sends the data to the background layer 
 
 | Argument   |  Type  | Description                |
 |------------|:------:|----------------------------|
@@ -321,13 +323,26 @@ Emitted when an event happens on a button
 
 <br>  
 
-#### `streamdeck:messagerelay`
-Emitted when a message was sent from one layer to another. This event is suppressed if the message is an [RPC](#rpc) message
+#### `streamdeck:notify:<event>`
+Emitted when an opposing layer sends a [Cross-Layer Communications](#cross-layer-communication) notify event.
 
-| `<event.data>` Property | Type                  | Description                                                                                                                   |
-|-------------------------|:---------------------:|-------------------------------------------------------------------------------------------------------------------------------|
-| `message`               | String                | The message sent                                                                                                              |
-| `context`               | [`Context`](#context) | The context of the message sender (only included if the message was sent by a PropertyInspector instance to the plugin layer) |
+`<event>` is the event name used when `.notify` was called
+
+| `<event.data>` Property | Type                  | Description                                                       |
+|-------------------------|:---------------------:|-------------------------------------------------------------------|
+| `data`                  | *any*                 | The data sent with the event                                      |                                                                        
+| `context`               | [`Context`](#context) | The context of the sender (only included in the background layer) |  
+
+<br>
+
+#### `streamdeck:messagerelay`
+Emitted when a message was sent from one layer to another. This event is suppressed if the message is for [Cross-Layer Commuincations](#cross-layer-interface)
+
+| `<event.data>` Property | Type                  | Description                                                               |
+|-------------------------|:---------------------:|---------------------------------------------------------------------------|
+| `message`               | String                | The message sent                                                          |
+| `context`               | [`Context`](#context) | The context of the message sender (only included in the background layer) | 
+
 
 
 <br><br><br>
@@ -399,7 +414,7 @@ Describes a context
 | `row`           | Number              | The row the button/context resides                                |
 | `device`        | [`Device`](#deivce) | The device the context is assoicated with                         |
 | `title`         | [`Title`](#title)   | The context's title                                               |
-| `settings`      | Object              | Settings stored for the context\*                                 |
+| `settings`      | Object              | Settings stored for the context                                   |
 | `state`         | Number              | The current state of the button                                   |
 | `inMultiAction` | Boolean             | `true` the the context is part of a multiaction otherwise `false` |
 
@@ -472,18 +487,76 @@ Uses `JSON.stringify` on the data then sends the data from the plugin layer to t
 | `data`    | *any*  | The data to send |  
 
 <br><br><br>
-# RPC
-To document - facilitates easier communications between the background layer and property inspector layers
+# Cross-Layer Communication
+Facilitates easier interactions between the background layer and property inspector layers
 
-#### `streamdeck.notify`
-#### `<context>.notify`
-*sends an event to the opposing layer. event is emitted on streamdeck as `streamdeck:notify:<event>`*
 
 #### `streamdeck.register`
-#### `streamdeck.unregister`
-*(un)registers and invoable method*
+Registers a Cross-Layer method handler.
 
+| Arguments   | Type     | Description                                            |
+|-------------|:--------:|--------------------------------------------------------|
+| `method`    | String   | The name of the method to be handled by the registrant |
+| `handler`   | Function | The handler for the method.                            |
+
+
+| `handler` Arguments | Type                  | Description                                                                       |
+|---------------------|:---------------------:|-----------------------------------------------------------------------------------|
+| `context`           | [`Context`](#context) | The context that invoked the method (not included in the PropertyInspector layer) |
+| `...`               | *any*                 | The argumensts specified when the method was invoked                              |
+
+If the handler needs to an asyncronous operation it should return a promise that is fulfilled once the operation is complete. Otherwise the return value is assumed to be the result.  
+
+<br>
+
+#### `streamdeck.unregister`
+Unregisters a Cross-Layer method handler.
+
+| Arguments\* | Type     | Description                                            |
+|-------------|:--------:|--------------------------------------------------------|
+| `method`    | String   | The name of the method to be handled by the registrant |
+| `handler`   | Function | The handler for the method.                            |
+
+\*: Both arguments must exactly match values given when the method was registered.
+
+
+#### `<context>.notify`
+Emits a `streamdeck:notify:<event>` event on the [`Context`](#context) instance.
+
+| Arguments | Type   | Description                 |
+|-----------|:------:|-----------------------------|
+| `event`   | String | The notify event to emit    |
+| `data`    | *any*  | Data to accompany the event |
+
+<br>
+
+#### `streamdeck.notify`
+*`PropertyInspector-only`*  
+
+Emits a `streamdeck:notify:<event>` event on the background layer.
+
+| Arguments | Type   | Description                 |
+|-----------|:------:|-----------------------------|
+| `event`   | String | The notify event to emit    |
+| `data`    | *any*  | Data to accompany the event |  
+
+
+<br>
+
+#### `<context>.invoke`
+Invokes a registered method from the [`Context`](#context) instance and returns a `Promise` that is resolved when the method returns a value.
+
+| Arguments | Type   | Description                                 |
+|-----------|:------:|---------------------------------------------|
+| `method`  | String | The name of the registered method to invoke |
+| `...`     | *any*  | Arguments to pass to the registered method  |  
+
+<br>
 
 #### `streamdeck.invoke`
-#### `<context>.invoke`
-*invokdes a registered invokable method*
+Invokes a registered method from the background layer and returns a `Promise` that is resolved when the method returns a value.
+
+| Arguments | Type   | Description                                 |
+|-----------|:------:|---------------------------------------------|
+| `method`  | String | The name of the registered method to invoke |
+| `...`     | *any*  | Arguments to pass to the registered method  |  
