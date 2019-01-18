@@ -179,10 +179,12 @@ module.exports = function (streamdeck, $devices, $contexts) {
             } else {
 
                 // Update context state
-                evtContext.settings = msg.payload.settings;
                 evtContext.column   = msg.payload.coordinates.column;
                 evtContext.row      = msg.payload.coordinates.row;
                 evtContext.device   = device;
+                if (msg.payload.settings != null) {
+                    evtContext.settings = msg.payload.settings;
+                }
                 if (msg.payload.isInMultiAction != null) {
                     evtContext.inMultiAction = msg.payload.isInMultiAction;
                 }
