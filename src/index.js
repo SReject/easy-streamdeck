@@ -3,6 +3,7 @@ const Emitter    = require('./misc/emitter.js');
 const Connection = require('./sdk/connection.js');
 const Context    = require('./sdk/context.js');
 const messages   = require('./sdk/messages.js');
+const rpc        = require('./sdk/rpc.js');
 
 
 
@@ -131,7 +132,6 @@ Object.defineProperties(streamdeck, {
                     !util.isNumber(device.size.columns, {whole: true, min: 1}) ||
                     !util.isNumber(device.size.rows, {whole: true, min: 1})
                 ) {
-                    console.log(device);
                     throw new TypeError('invalid device list');
                 }
 
@@ -178,8 +178,8 @@ Object.defineProperties(streamdeck, {
                         enumerable: true,
                         value: function sendToPlugin(data) {
                             streamdeck.sendJSON({
-                                event: "sendToPlugin",
-                                action: context.action,
+                                event:  "sendToPlugin",
+                                action:  streamdeck.actionId,
                                 context: streamdeck.uuid,
                                 payload: data
                             });
@@ -237,6 +237,10 @@ Object.defineProperties(streamdeck, {
     }
 });
 
+// call rpc handler
+rpc(streamdeck);
+
+// hook websocket events to re-emit on the streamdeck instance
 $conn.on('connect', function () {
     streamdeck.emit('websocket:connect');
 });

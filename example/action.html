@@ -42,26 +42,28 @@
         <script>
 
         streamdeck.on('ready', function () {
-            function sendToPlugin(key, value) {
-                let data = {};
-                data[key] = value;
-                streamdeck.sendToPlugin(data);
-            }
 
             let eleValueSelect = document.getElementById('value-select'),
                 eleValueSlider = document.getElementById('value-slider'),
                 eleBgSelect    = document.getElementById('background-select');
 
+            streamdeck.invoke('getnumbervalue').then(res => {
+                eleValueSlider.value = eleValueSelect.value = res;
+
+            }).catch(err => {
+                console.log(err);
+            });
+
             eleValueSelect.addEventListener('change', function (evt) {
-                sendToPlugin('setValue', eleValueSlider.value = eleValueSelect.value);
+                streamdeck.notify('setvalue', eleValueSlider.value = eleValueSelect.value);
             });
 
             eleValueSlider.addEventListener('change', function (evt) {
-                sendToPlugin('setValue', eleValueSelect.value = eleValueSlider.value);
+                streamdeck.notify('setvalue', eleValueSelect.value = eleValueSlider.value);
             });
             
             eleBgSelect.addEventListener('change', function () {
-                sendToPlugin('background-image', eleBgSelect.value);
+                streamdeck.notify('setbackground', eleBgSelect.value);
             });
         });
         </script>

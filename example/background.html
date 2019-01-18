@@ -44,28 +44,36 @@
 
         });
 
-        streamdeck.on('streamdeck:messagerelay', function (evt) {
+        streamdeck.register('getnumbervalue', function (context) {
+            if (
+                settingsCache[context.uuid] == null ||
+                settingsCache[context.uuid].keyPressCounter == null
+            ) {
+                return 0;
+            }
 
+            return settingsCache[context.uuid].keyPressCounter;
+        });
+
+        streamdeck.on("streamdeck:notify:setvalue", function (evt) {
             let context = evt.data.context,
-                jsonPayload = evt.data.message;
+                newValue = evt.data.data;
 
-            if (jsonPayload.hasOwnProperty('setValue')) {
-                let newValue = jsonPayload.setValue;
-
-                if (settingsCache[context.uuid] == null) {
-                    settingsCache[context.uuid] = {};
-                }
-
-                settingsCache[context.uuid].keyPressCounter = newValue;
-
-                context.setSettings({'keyPressCounter': newValue});
-                context.setTitle("" + newValue);
+            if (settingsCache[context.uuid] == null) {
+                settingsCache[context.uuid] = {};
             }
 
-            if (jsonPayload.hasOwnProperty('background-image')) {
-                let imageName = jsonPayload['background-image'];
-                context.setImageFromUrl(`./icons/${imageName}.png`);
-            }
+            settingsCache[context.uuid].keyPressCounter = newValue;
+
+            context.setSettings({'keyPressCounter': newValue});
+            context.setTitle("" + newValue);
+        });
+
+        streamdeck.on("streamdeck:notify:setbackground", function (evt) {
+            let context = evt.data.context,
+                imageName = evt.data.data;
+
+            context.setImageFromUrl(`./icons/${imageName}.png`);
         });
         </script>
     </body>

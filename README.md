@@ -98,24 +98,6 @@ Tell streamdeck to open the specified url in the native default browser
 
 <br>  
 
-#### `streamdeck.send`
-Sends the data to Stream Deck's software
-
-| Argument   |  Type  | Description                |
-|------------|:------:|----------------------------|
-| `data`     | string | The data to send           |  
-
-<br>  
-
-#### `streamdeck.sendJSON`
-Uses `JSON.stringify` and then sends the stringified data to Stream Deck's software
-
-| Argument   |  Type  | Description                |
-|------------|:------:|----------------------------|
-| `data`     | *any*  | The data to send           |  
-
-<br>  
-
 #### `streamdeck.switchToProfile`
 *`Background-Only`*
 
@@ -135,7 +117,34 @@ Creates an untracked [`Context`](#context) instance
 | Argument  |  Type  | Description                                      |
 |-----------|:------:|--------------------------------------------------|
 | `action`  | string | The action id of which to create the context for |
-| `context` | string | The context's opaque value                       |
+| `context` | string | The context's opaque value                       |  
+
+<br>
+
+#### `streamdeck.send`
+Sends the data to Stream Deck's software
+
+| Argument   |  Type  | Description                |
+|------------|:------:|----------------------------|
+| `data`     | string | The data to send           |  
+
+<br>  
+
+#### `streamdeck.sendJSON`
+Uses `JSON.stringify` and then sends the stringified data to Stream Deck's software
+
+| Argument   |  Type  | Description                |
+|------------|:------:|----------------------------|
+| `data`     | *any*  | The data to send           |  
+
+<br>
+
+#### `streamdeck.sendToPlugin`
+Uses `JSON.stringify and then sends the data to the background layer 
+
+| Argument   |  Type  | Description                |
+|------------|:------:|----------------------------|
+| `data`     | *any*  | The data to send           |  
 
 
 <br><br><br>
@@ -313,7 +322,7 @@ Emitted when an event happens on a button
 <br>  
 
 #### `streamdeck:messagerelay`
-Emitted when a message was sent from one layer to another
+Emitted when a message was sent from one layer to another. This event is suppressed if the message is an [RPC](#rpc) message
 
 | `<event.data>` Property | Type                  | Description                                                                                                                   |
 |-------------------------|:---------------------:|-------------------------------------------------------------------------------------------------------------------------------|
@@ -455,9 +464,26 @@ Sets the context to a predefined state
 
 <br>
 
-#### `<Context>.sendToPlugin`
-Sends a message to the plugin layer
+#### `<Context>.send`
+Uses `JSON.stringify` on the data then sends the data from the plugin layer to the property inspector layer
 
 | Arguments | Type   | Description      |
 |-----------|:------:|------------------|
-| `message` | *any*  | The data to send |
+| `data`    | *any*  | The data to send |  
+
+<br><br><br>
+# RPC
+To document - facilitates easier communications between the background layer and property inspector layers
+
+#### `streamdeck.notify`
+#### `<context>.notify`
+*sends an event to the opposing layer. event is emitted on streamdeck as `streamdeck:notify:<event>`*
+
+#### `streamdeck.register`
+#### `streamdeck.unregister`
+*(un)registers and invoable method*
+
+
+#### `streamdeck.invoke`
+#### `<context>.invoke`
+*invokdes a registered invokable method*
