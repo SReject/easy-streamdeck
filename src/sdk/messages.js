@@ -198,8 +198,8 @@ module.exports = function (streamdeck, $devices, $contexts) {
 
                     // emit events
                     let keyEvent = msg.event === 'keyUp' ? 'up' : 'down';
-                    streamdeck.emit(`streamdeck:key:${keyEvent}`, {context: evtContext.toSafe(), device: Object.assign(Object.create(null), device)});
-                    streamdeck.emit(`streamdeck:key`, {event: keyEvent, context: evtContext.toSafe(), device: Object.assign(Object.create(null), device)});
+                    streamdeck.emit(`streamdeck:keypress:${keyEvent}`, {context: evtContext.toSafe(), device: Object.assign(Object.create(null), device)});
+                    streamdeck.emit(`streamdeck:keypress`, {event: keyEvent, context: evtContext.toSafe(), device: Object.assign(Object.create(null), device)});
 
                 // Event: willAppear
                 // Event: willDisappear
