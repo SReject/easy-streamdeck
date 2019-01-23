@@ -127,6 +127,8 @@ class Emitter {
             return this;
         }
 
+        options = options == null ? {} : options;
+
         let self      = this,
             listeners = this[eventListenersKey][event],
             stopped   = false,

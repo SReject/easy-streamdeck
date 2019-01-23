@@ -25,9 +25,8 @@ module.exports = function rpc(streamdeck) {
         let result = "";
         do {
             let i = 32;
-            while (i) {
-                i -= 1;
-                result += idChars[Math.floor(Math.random() * idChars.length)];
+            while (i--) {
+                result += idChars[Math.floor(Math.random() * 62)];
             }
         } while (util.isKey($pending, result) && $pending[result] != null);
         return result;

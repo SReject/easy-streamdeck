@@ -41,9 +41,7 @@ function onMessage(evt) {
 }
 function onError() {
     cleanup(this);
-
     this.emit('error');
-
     reconnect(this);
 }
 function onClose(evt) {
