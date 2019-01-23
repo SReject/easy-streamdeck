@@ -1,94 +1,12 @@
 const util = require('./util.js');
 
-const eventListenersKey = Symbol('event listeners');
-const eventEmitQueueKey = Symbol('event emit queue');
-const eventEmitTimeoutKey = Symbol('event emit timeout key');
-
-const processEmitQueue = (self) => {
-
-    // retrieve event queue for the instance
-    let emitQueue = self[eventEmitQueueKey],
-
-        // Retrieve next event to emit
-        event = emitQueue.shift(),
-
-        // Get list of handlers for the event
-        listeners = self[eventListenersKey][event.name];
-
-    // If there's more queued events to emit, start a new timeout
-    if (emitQueue.length) {
-        self[eventEmitTimeoutKey] = setTimeout(processEmitQueue, 1, self);
-
-    // Otherwise null-out the timeout id
-    } else {
-        self[eventEmitTimeoutKey] = null;
-    }
-
-    // No registered event listeners for event
-    if (listeners == null || !listeners.length) {
-        return;
-    }
-
-    // Stopped tracking; set to true if the handler calls .stop()
-    let stopped = false,
-        eventData = Object.create(null);
-
-    Object.defineProperties(eventData, {
-        stop: {
-            enumerable: true,
-            value: function stop() {
-                stopped = true;
-            }
-        },
-        data: {
-            enumerable: true,
-            value: event.data
-        }
-    });
-
-    let idx = 0;
-    while (idx < listeners.length) {
-
-        // Retrieve next listener for the event
-        let listener = listeners[idx];
-
-        // Listener is a one-time handler
-        if (listener.once) {
-
-            // Remove the handler from the event's listeners list
-            listeners.splice(idx, 1);
-
-        } else {
-            idx += 1;
-        }
-
-        // Attempt to call handler
-        try {
-            listener.handler.call(self, eventData);
-
-            // Listener called .stop() - exit processing
-            if (stopped && event.options.stoppable !== false) {
-                return;
-            }
-
-        // Handler raised error
-        } catch (err) {
-
-            // options indicate that errors should not be suppressed
-            if (!event.options.suppressErrors) {
-
-                // rethrow error
-                throw err;
-            }
-        }
-    }
-};
+const eventListenersKey   = Symbol('event listeners');
+const eventEmitQueueKey   = Symbol('event emit queue');
 
 class Emitter {
     constructor() {
         this[eventListenersKey] = {};
         this[eventEmitQueueKey] = [];
-        this[eventEmitTimeoutKey] = null;
     }
 
     on(event, handler, isOnce) {
@@ -112,18 +30,13 @@ class Emitter {
 
             // ready event already triggered
             if (this.ready) {
-                let self = this;
-                setTimeout(function () {
-                    handler.call(self);
-                }, 1);
-                return;
+                handler.call(this);
+                return this;
             }
 
             // otherwise 'ready' handlers are converted to one-time handler
             isOnce = true;
         }
-
-
 
         // Create a list of event handlers for the event if one does not exist
         if (this[eventListenersKey][event] == null) {
@@ -205,16 +118,56 @@ class Emitter {
             throw new TypeError('invalid event name');
         }
 
-        // Add emitter to processing queue
-        this[eventEmitQueueKey].push({
-            name: event,
-            data: data,
-            options: options == null ? {} : options
+        // No listeners for event
+        if (
+            this[eventListenersKey] == null ||
+            this[eventListenersKey][event] == null ||
+            this[eventListenersKey][event].length === 0
+        ) {
+            return this;
+        }
+
+        let self      = this,
+            listeners = this[eventListenersKey][event],
+            stopped   = false,
+            evt       = Object.create(null),
+            idx       = 0;
+
+        Object.defineProperties(evt, {
+            stop: {
+                enumerable: true,
+                value: function stop() {
+                    stopped = true;
+                }
+            },
+            data: {
+                enumerable: true,
+                value: data
+            }
         });
 
-        // Event processor not running so start it
-        if (this[eventEmitTimeoutKey] == null) {
-            this[eventEmitTimeoutKey] = setTimeout(processEmitQueue, 1, this);
+        while (idx < listeners.length) {
+
+            // Retrieve next listener for the event
+            let listener = listeners[idx];
+
+            // Listener is a one-time handler
+            if (listener.once) {
+
+                // Remove the handler from the event's listeners list
+                listeners.splice(idx, 1);
+
+            } else {
+                idx += 1;
+            }
+
+            // Attempt to call handler
+            listener.handler.call(self, evt);
+
+            // Listener called .stop() - exit processing
+            if (stopped && options.stoppable !== false) {
+                break;
+            }
         }
 
         // return instance to enable chaining

@@ -6,10 +6,10 @@ const idChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 function makeResult(id, state, data) {
     return {
         rpc: {
-            id: id,
-            type: 'reply',
+            id:    id,
+            type:  'reply',
             state: state,
-            data: data == null ? null : data
+            data:  data == null ? null : data
         }
     };
 }
