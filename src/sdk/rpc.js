@@ -160,7 +160,67 @@ module.exports = function rpc(streamdeck) {
                             }
                         });
                     }
+                },
+                getTitle: {
+                    enumerable: true,
+                    value: function () {
+                        return this.invoke('INTERNAL:GetTitle');
+                    }
+                },
+                setTitle: {
+                    enumerable: true,
+                    value: function (image, target) {
+                        return this.invoke('INTERNAL:SeTitle', image, target);
+                    }
+                },
+                getImage: {
+                    enumerable: true,
+                    value: function () {
+                        return this.invoke('INTERNAL:GetImage');
+                    }
+                },
+                setImage: {
+                    enumerable: true,
+                    value: function (image, target) {
+                        return this.invoke('INTERNAL:SetImage', image, target);
+                    }
+                },
+                getSettings: {
+                    enumerable: true,
+                    value: function () {
+                        return this.invoke('INTERNAL:GetSettings');
+                    }
+                },
+                setSettings: {
+                    enumerable: true,
+                    value: function (value) {
+                        return this.invoke('INTERNAL:SetSettings', value);
+                    }
                 }
+            });
+        } else {
+            streamdeck.register('INTERNAL:GetTitle', function (context) {
+                return context.title;
+            });
+            streamdeck.register('INTERNAL:SetTitle', function (context, title, target) {
+                context.setTitle(title, target);
+                context.title.text = title;
+                return context.title;
+            });
+            streamdeck.register('INTERNAL:GetImage', function () {
+                throw new Error('GetImage not supported by streamdeck');
+            });
+            streamdeck.register('INTERNAL:SetImage', function (context, image, target) {
+                context.setTitle(image, target);
+                return context.title;
+            });
+            streamdeck.register('INTERNAL:GetSettings', function (context) {
+                return context.settings;
+            });
+            streamdeck.register('INTERNAL:SetSettings', function (context, settings) {
+                context.setSettings(settings);
+                context.settings = settings;
+                return context.settings;
             });
         }
     });
