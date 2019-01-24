@@ -2,7 +2,7 @@
 An abstraction layer for Elgato's Stream Deck plugin SDK
 
 # Help
-Have questions? ask on Stream Deck's [Community Ran Discord](https://discord.gg/g5UZ9S)
+Have questions? ask on Stream Deck's [Community Ran Discord](https://discord.gg/4gYyuxy)
 
 # Usage
 
