@@ -1,3 +1,4 @@
+const util      = require('../common/utils.js');
 const irnClient = require('../common/irn-client.js');
 const onmessage = require('./onmessage.js');
 const context   = require('./context.js');
@@ -16,6 +17,22 @@ function background(streamdeck, deviceList) {
             enumerable: true,
             get: function () {
                 return Object.assign({}, contextList);
+            }
+        },
+        switchToProfile: {
+            enumerable: true,
+            value: function switchToProfile(profile, device) {
+                if (!util.isString(profile)) {
+                    throw new Error('invalid profile argument');
+                }
+                this.send({
+                    event: "switchToProfile",
+                    context: this.id,
+                    device: device,
+                    payload: {
+                        profile: profile
+                    }
+                });
             }
         },
         Context: {
