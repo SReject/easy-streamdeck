@@ -1,253 +1,266 @@
-const util       = require('./misc/util.js');
-const Emitter    = require('./misc/emitter.js');
-const Connection = require('./sdk/connection.js');
-const Context    = require('./sdk/context.js');
-const messages   = require('./sdk/messages.js');
-const rpc        = require('./sdk/rpc.js');
+const util       = require('./common/utils.js');
+const Connection = require('./common/connection.js');
 
+const background = require('./background');
+const foreground = require('./foreground');
 
+const $ready      = Symbol('ready');
+const $port       = Symbol('port');
+const $id         = Symbol('instance identifier');
+const $register   = Symbol('registerEvent');
+const $layer      = Symbol('layer');
+const $host       = Symbol('host');
+const $deviceList = Symbol('device list');
 
-const streamdeck = new Emitter();
+/**
+ * @class StreamDeck
+ * @classdesc StreamDeck API handler
+ * @extends {Connection}
+*/
+class StreamDeck extends Connection {
 
+    /**
+     * @desc Adds an event listener
+     * @param {string} event The event name to attach to
+     * @param {function} handler The callback function to call when the event occurs
+     * @param {boolean} [once=false] If true, after the event is emitted the handler will be removed
+     * @memberof StreamDeck
+     * @instance
+     * @return {this}
+    */
+    on(event, handler, once) {
+        if (event === 'ready') {
+            if (this.ready) {
+                handler.call(this);
+                return;
+            }
+            once = true;
+        }
+        return super.on(event, handler, once);
+    }
 
-let $ready = false,
-    $port,
-    $uuid,
-    $layer,
-    $host,
-    $devices   = {},
-    $contexts  = {},
-    $onmessage = messages(streamdeck, $devices, $contexts),
-    $conn      = new Connection();
+    /**
+     * @desc Removes the event listener. All parameters must match those used to create the listener
+     * @memberof StreamDeck
+     * @instance
+     * @param {string} event The event name to attach to
+     * @param {function} handler The callback function to call when the event occurs
+     * @param {boolean} [once=false] If true, after the event is emitted the handler will be removed
+     * @return {this}
+    */
+    off(event, handler, once) {
+        if (event === 'ready') {
+            once = true;
+        }
+        return super.off(event, handler, once);
+    }
 
-// Members common to all layers
-Object.defineProperties(streamdeck, {
+    constructor() {
+        super();
+        Object.defineProperty(this, $ready, {writable: true, value: false});
 
-    /* Read only properties */
-    ready:   {enumerable: true, get: () => $ready},
-    port:    {enumerable: true, get: () => $port},
-    uuid:    {enumerable: true, get: () => $uuid},
-    layer:   {enumerable: true, get: () => $layer},
-    host:    {enumerable: true, get: () => $host},
-    devices: {enumerable: true, get: () => {
-        let res = [];
-        Object.keys($devices).forEach(id => {
-            if ($devices[id] != null) {
-                res.push(Object.assign(Object.create(null), $devices[id]));
+        Object.defineProperties(this, {
+            /**
+             * The ready state of the StreamDeck instance.
+             *
+             * true if ready, false if not
+             * @name StreamDeck#ready
+             * @instance
+             * @type {boolean}
+             * @readonly
+             */
+            ready: {
+                enumerable: true,
+                get: function () {
+                    return this[$ready];
+                }
+            },
+
+            /**
+             * The port to use to connect to Stream Deck's software
+             * @name StreamDeck#port
+             * @instance
+             * @type {boolean}
+             * @readonly
+             */
+            port: {
+                enumerable: true,
+                get: function () {
+                    return this[$id];
+                }
+            },
+            id: {
+                enumerable: true,
+                get: function () {
+                    return this[$id];
+                }
+            },
+            layer: {
+                enumerable: true,
+                get: function () {
+                    return this[$layer];
+                }
+            },
+            host: {
+                enumerable: true,
+                get: function () {
+                    return Object.assign({}, this[$host]);
+                }
+            },
+            devices: {
+                enumerable: true,
+                get: function () {
+                    return JSON.parse(JSON.stringify(this[$deviceList]));
+                }
             }
         });
-        return res;
-    }},
-
-    /* Read only methods */
-    send: {
-        enumerable: true,
-        value: function send(data) {
-            return $conn.send(data);
-        }
-    },
-    sendJSON: {
-        enumerable: true,
-        value: function sendJSON(data) {
-            return $conn.sendJSON(data);
-        }
-    },
-    openUrl: {
-        enumerable: true,
-        value: function openUrl(url) {
-            if (!util.isString(url, {notEmpty: true})) {
-                throw new TypeError('invalid url');
-            }
-            $conn.sendJSON({
-                event: "openUrl",
-                payload: { url: url }
-            });
-        }
-    },
-
-    /* Initialization function */
-    start: {
-        enumerable: true,
-        value: function init(port, uuid, registerEvent, host, context) {
-
-            // streamdeck.start already called
-            if ($ready) {
-                throw new Error('start() function already called');
-            }
-            $ready = true;
-
-            // validate port
-            if (util.isString(port, {match: /^\d+$/i})) {
-                port = Number(port);
-            }
-            if (!util.isNumber(port, {whole: true, min: 0, max: 65535})) {
-                throw new TypeError('invalid port argument');
-            }
-
-            // validate uuid
-            if (!util.isString(uuid, {notEmpty: true})) {
-                throw new TypeError('invalid uuid argument');
-            }
-
-            // validate registerEvent
-            if (!util.isString(registerEvent, {match: /^register(?:Plugin|PropertyInspector)$/})) {
-                throw new TypeError('invalid registerEvent argument');
-            }
-
-            // Process host as JSON if its a string
-            if (util.isString(host)) {
-                try {
-                    host = JSON.parse(host);
-                } catch (e) {
-                    throw new TypeError('invalid hostInfo argument');
-                }
-            }
-
-            // Validate hostInfo ("inInfo")
-            if (
-                host == null ||
-                !util.isKey(host, 'application') ||
-                !util.isKey(host.application, 'language') ||
-                !util.isString(host.application.language) ||
-                !util.isKey(host.application, 'platform') ||
-                !util.isString(host.application.platform) ||
-                !util.isKey(host.application, 'version') ||
-                !util.isString(host.application.version) ||
-                !util.isKey(host, 'devices') ||
-                !util.isArray(host.devices)
-            ) {
-                throw new TypeError('invalid environment argument');
-            }
-
-            // Process host.devices
-            let deviceList = {};
-            host.devices.forEach(device => {
-
-                // Validate device
-                if (
-                    device == null ||
-                    !util.isString(device.id, {match: /^[A-F\d]{32}$/}) ||
-                    (device.type != null && !util.isNumber(device.type, {whole: true, min: 0})) ||
-                    device.size == null ||
-                    !util.isNumber(device.size.columns, {whole: true, min: 1}) ||
-                    !util.isNumber(device.size.rows, {whole: true, min: 1})
-                ) {
-                    throw new TypeError('invalid device list');
-                }
-
-                // Store the device
-                deviceList[device.id] = {
-                    id: device.id,
-                    type: device.type,
-                    columns: device.size.columns,
-                    rows: device.size.rows
-                };
-            });
-
-            // Check: loaded as a Property Inspector instance
-            if (registerEvent === 'registerPropertyInspector') {
-
-                // Process context as JSON if its a string
-                if (util.isString(context)) {
-                    try {
-                        context = JSON.parse(context);
-                    } catch (e) {
-                        throw new TypeError('invalid contextInfo argument');
-                    }
-                }
-
-                // Validate contextInfo ("inApplicationInfo")
-                if (context == null || !util.isString(context.context, {match: /^[A-F\d]{32}$/}) || !util.isString(context.action, {notEmpty: true})) {
-                    throw new TypeError('invalid contextInfo argument');
-                }
-            }
-
-            $port    = port;
-            $uuid    = uuid;
-            $host    = host.application;
-            $devices = deviceList;
-            $layer   = registerEvent === 'registerPlugin' ? 'plugin' : 'propertyinspector';
-
-
-            // layer-based loading
-            if ($layer === 'propertyinspector') {
-                Object.defineProperties(streamdeck, {
-                    contextId: {enumerable: true, value: context.context},
-                    actionId:  {enumerable: true, value: context.action},
-                    sendToPlugin: {
-                        enumerable: true,
-                        value: function sendToPlugin(data) {
-                            streamdeck.sendJSON({
-                                event:  "sendToPlugin",
-                                action:  streamdeck.actionId,
-                                context: streamdeck.uuid,
-                                payload: data
-                            });
-                        }
-                    }
-                });
-
-            } else {
-                Object.defineProperties(streamdeck, {
-                    switchToProfile: {
-                        enumerable: true,
-                        value: function switchToProfile(profileName) {
-                            if (!util.isString(profileName)) {
-                                throw new TypeError('invalid profileName argument');
-                            }
-                            streamdeck.sendJSON({
-                                event: "switchToProfile",
-                                context: streamdeck.uuid,
-                                payload: {profile: profileName}
-                            });
-                        }
-                    },
-                    createContext: {
-                        enumerable: true,
-                        value: function createContext(action, contextId) {
-                            return new Context(streamdeck, action, contextId);
-                        }
-                    },
-                    contexts: {
-                        enumerable: true,
-                        get: function () {
-                            let result = [];
-                            Object.keys($contexts).forEach(id => {
-                                if ($contexts[id] != null) {
-                                    result.push($contexts[id].toSafe());
-                                }
-                            });
-
-                            return result;
-                        }
-                    }
-                });
-            }
-
-            // start connecting
-            $conn.on('message', $onmessage);
-            $conn.on('message', function (evt) {
-                streamdeck.emit('websocket:message', evt.data);
-            });
-            $conn.connect(port, uuid, registerEvent);
-
-            // emit ready event
-            streamdeck.emit('ready', null, {stoppable: false, suppressError: true});
-        }
     }
-});
 
-// call rpc handler
-rpc(streamdeck);
+    openUrl(url) {
+        if (!util.isString(url, {notEmpty: true})) {
+            throw new TypeError('invalid url');
+        }
 
-// hook websocket events to re-emit on the streamdeck instance
-$conn.on('connect', function () {
-    streamdeck.emit('websocket:connect');
-});
-$conn.on('close', function (evt) {
-    streamdeck.emit('websocket:close', evt);
-});
-$conn.on('error', function (evt) {
-    streamdeck.emit('websocket:error', evt);
-});
-module.exports = streamdeck;
+        this.send({
+            event: "openUrl",
+            payload: { url: url }
+        });
+    }
+
+    start(port, id, register, hostinfo, selfinfo) {
+
+        if (this[$ready] !== false) {
+            throw new Error('start() function already called');
+        }
+        let readyDesc = Object.getOwnPropertyDescriptor(this, $ready);
+        readyDesc.value = true;
+        readyDesc.writable = false;
+
+        /*
+        ** ARGUMENT VALIDATION
+        */
+
+        // Validate port
+        if (util.isString(port, {match: /^\d+$/i})) {
+            port = Number(port);
+        }
+        if (!util.isNumber(port, {whole: true, min: 0, max: 65535})) {
+            throw new TypeError('invalid port argument');
+        }
+
+        // Validate uuid
+        if (!util.isString(id, {match: /^(?:(?:[A-F\d]+-){4}[A-F\d]+)$/})) {
+            throw new TypeError('invalid uuid argument');
+        }
+
+        // Validate registerEvent
+        if (!util.isString(register, {match: /^register(?:Plugin|PropertyInspector)$/})) {
+            throw new TypeError('invalid registerEvent argument');
+        }
+
+        // Process host as JSON if its a string
+        if (util.isString(hostinfo)) {
+            try {
+                hostinfo = JSON.parse(hostinfo);
+            } catch (e) {
+                throw new TypeError('invalid hostInfo argument');
+            }
+        }
+
+        // Validate hostinfo
+        if (
+            hostinfo == null ||
+            !util.isKey(hostinfo, 'application') ||
+            !util.isKey(hostinfo.application, 'language') ||
+            !util.isString(hostinfo.application.language) ||
+            !util.isKey(hostinfo.application, 'platform') ||
+            !util.isString(hostinfo.application.platform) ||
+            !util.isKey(hostinfo.application, 'version') ||
+            !util.isString(hostinfo.application.version) ||
+            !util.isKey(hostinfo, 'devices') ||
+            !util.isArray(hostinfo.devices)
+        ) {
+            throw new TypeError('invalid environment argument');
+        }
+
+        let deviceList = {};
+        hostinfo.devices.forEach(device => {
+            if (
+                device == null ||
+                !util.isString(device.id, {match: /^[A-F\d]{32}$/}) ||
+                device.size == null ||
+                !util.isNumber(device.size.rows, {whole: true, min: 1}) ||
+                !util.isNumber(device.size.columns, {whole: true, min: 1}) ||
+                (device.type != null && !util.isNumber(device.type, {whole: true, min: 0}))
+            ) {
+                throw new TypeError('invalid device list');
+            }
+
+            // add the validated device to the deviceList
+            deviceList[device.id] = {
+                id:      device.id,
+                rows:    device.size.rows,
+                columns: device.size.columns,
+                type:    device.type
+            };
+        });
+
+        // If foreground, validate selfinfo
+        if (register === 'registerPropertyInspector') {
+
+            // If string, convert to object
+            if (util.isString(selfinfo)) {
+                try {
+                    selfinfo = JSON.parse(selfinfo);
+                } catch (e) {
+                    throw new TypeError('invalid selfInfo argument');
+                }
+            }
+
+            // Validate selfinfo
+            if (
+                selfinfo == null ||
+                !util.isString(selfinfo.context, {match: /^[A-F\d]{32}$/}) ||
+                !util.isString(selfinfo.action, {notEmpty: true})
+            ) {
+                throw new TypeError('invalid selfInfo argument');
+            }
+
+        // If background, selfinfo should be null
+        } else if (selfinfo != null) {
+            throw new TypeError('selfinfo specified for plugin');
+        }
+        /*
+        ** VALIDATION COMPLETE
+        */
+        Object.defineProperty(this, $port,       {value: port});
+        Object.defineProperty(this, $id,         {value: id});
+        Object.defineProperty(this, $register,   {value: register});
+        Object.defineProperty(this, $layer,      {value: register === 'registerPlugin' ? 'plugin' : 'propertyinspector'});
+        Object.defineProperty(this, $host,       {value: hostinfo.application});
+        Object.defineProperty(this, $deviceList, {value: deviceList});
+
+        // Start based on register value
+        if (this[$layer] === 'plugin') {
+            background(this, deviceList);
+
+        } else {
+            foreground(this, selfinfo);
+        }
+
+        // start connection to Stream Deck
+        this.connect(`ws://localhost:${port}`);
+        this.on('websocket:connect', function (evt) {
+            this.send({
+                event: register,
+                uuid:  id
+            });
+            evt.stop();
+        });
+
+        // emit ready event
+        this.emit('ready');
+    }
+}
+
+module.exports = StreamDeck;

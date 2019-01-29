@@ -1,6 +1,6 @@
 {
   "name": "easy-streamdeck-sdk",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Abstraction layer for streamdeck's SDK",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "sdk",
     "abstraction"
   ],
-  "author": "Team Crowbar",
+  "author": "SReject",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/sreject/easy-streamdeck/issues"

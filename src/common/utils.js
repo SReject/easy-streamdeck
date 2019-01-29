@@ -12,7 +12,7 @@ function isNumber(subject, opts = {}) {
         return false;
     }
 
-    // nan not allowed
+    // NaN not allowed
     if (!opts.allowNaN && isNaN(subject)) {
         return false;
     }
@@ -214,12 +214,12 @@ const deepFreeze = (function() {
 }());
 
 module.exports = Object.freeze({
-    isBoolean: isBoolean,
-    isNumber: isNumber,
-    isString: isString,
-    isBase64: isBase64,
-    isArray: isArray,
-    isKey: isKey,
+    isBoolean:  isBoolean,
+    isNumber:   isNumber,
+    isString:   isString,
+    isBase64:   isBase64,
+    isArray:    isArray,
+    isKey:      isKey,
     isCallable: isCallable,
     deepFreeze: deepFreeze
 });

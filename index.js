@@ -1,22 +1,12 @@
-const streamdeck = require('./src');
+const Streamdeck = require('./src/');
 
-// Running in a browser-esq context
-if (window != null && window.navigator != null && window.navigator === navigator && String(navigator.appVersion) === navigator.appVersion) {
+if (typeof window === 'object' && typeof document === 'object') {
+    window.streamdeck = new Streamdeck();
+    window.connectSocket = window.streamdeck.start.bind(window.streamdeck);
 
-    // Add streamdeck to the window instance
-    Object.defineProperty(window, 'streamdeck', {
-        enumerable: true,
-        value: streamdeck
-    });
+} else {
 
-    // Elgato Streamdeck plugin environment
-    if (navigator.appVersion.includes('QtWebEngine')) {
+    console.log(typeof window, window === this, typeof document);
 
-        // Add the connectSocket handler to the global scope
-        Object.defineProperty(window, 'connectSocket', {
-            value: streamdeck.start
-        });
-    }
+    module.exports = Streamdeck;
 }
-
-module.exports = streamdeck;
