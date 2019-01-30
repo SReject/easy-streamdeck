@@ -3,77 +3,54 @@
     <head>
         <title>easy-streamdeck - Plugin Example</title>
         <meta charset="utf-8">
+
+        <!-- include easy-streamdeck library before scripts that make use of it -->
         <script src="./easy-streamdeck.js"></script>
     </head>
     <body>
         <script>
-        let settingsCache = {};
 
-        streamdeck.on('streamdeck:button:appear', function (evt) {
-            let context = evt.data,
-                keyPressCounter = 0;
+        // listen for context:appear events
+        streamdeck.on('context:appear', function (evt) {
+            let keyPressCounter;
 
-            if (context.settings != null && context.settings.hasOwnProperty('keyPressCounter')) {
-                keyPressCounter = context.settings.keyPressCounter;
+
+            // Retrieve keypress count for the context
+            if (this.settings.hasOwnProperty('keyPressCounter')) {
+                keyPressCounter = this.settings.keyPressCounter;
+
+            // Otherwise
+            } else {
+                // Give the keypress count a default
+                this.settings.keyPressCounter =
+                    keyPressCounter = 0;
+
+                // store the counter
+                this.setSettings(this.settings);
             }
-
-            settingsCache[context.uuid] = {'keyPressCounter': keyPressCounter};
-            context.setTitle("" + keyPressCounter);
+            
+            // Update the context's title
+            this.setTitle("" + keyPressCounter);
         });
 
-        streamdeck.on('streamdeck:keypress:up', function (evt) {
+        // listen for keypress:up events
+        streamdeck.on('keypress:up', function (evt) {
 
-            let context = evt.data,
-                keyPressCounter,
-                updatedSettings;
+            let keyPressCounter = 0;
 
-            keyPressCounter = 0;
-
-            if (context.settings != null && context.settings.hasOwnProperty('keyPressCounter')) {
-                keyPressCounter = context.settings.keyPressCounter;
+            // Retrieve the keypress count for the context
+            if (this.settings.hasOwnProperty('keyPressCounter')) {
+                keyPressCounter = this.settings.keyPressCounter;
             }
 
-            keyPressCounter++;
-            keyPressCounter = keyPressCounter % 10;
+            // add 1 to the counter, if its over 9, wrap back to 0
+            this.settings.keyPressCounter = (keyPressCounter + 1) % 10;
 
-            updatedSettings = {'keyPressCounter': keyPressCounter};
-            settingsCache[context.uuid] = updatedSettings;
+            // update the stored count
+            this.setSettings(this.settings);
 
-            context.setSettings(updatedSettings);
-            context.setTitle("" + keyPressCounter);
-
-        });
-
-        streamdeck.register('getnumbervalue', function (context) {
-            if (
-                settingsCache[context.uuid] == null ||
-                settingsCache[context.uuid].keyPressCounter == null
-            ) {
-                return 0;
-            }
-
-            return settingsCache[context.uuid].keyPressCounter;
-        });
-
-        streamdeck.on("streamdeck:notify:setvalue", function (evt) {
-            let context = evt.data.context,
-                newValue = evt.data.data;
-
-            if (settingsCache[context.uuid] == null) {
-                settingsCache[context.uuid] = {};
-            }
-
-            settingsCache[context.uuid].keyPressCounter = newValue;
-
-            context.setSettings({'keyPressCounter': newValue});
-            context.setTitle("" + newValue);
-        });
-
-        streamdeck.on("streamdeck:notify:setbackground", function (evt) {
-            let context = evt.data.context,
-                imageName = evt.data.data;
-
-            context.setImageFromUrl(`./icons/${imageName}.png`);
+            // update the title
+            this.setTitle("" + this.settings.keyPressCounter);
         });
         </script>
     </body>

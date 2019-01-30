@@ -1,12 +1,10 @@
-const util = require('./util.js');
+const util = require('./utils.js');
 
-const eventListenersKey   = Symbol('event listeners');
-const eventEmitQueueKey   = Symbol('event emit queue');
+const $eventListenersKey = Symbol('event listeners');
 
 class Emitter {
     constructor() {
-        this[eventListenersKey] = {};
-        this[eventEmitQueueKey] = [];
+        Object.defineProperty(this, $eventListenersKey, {value: {}});
     }
 
     on(event, handler, isOnce) {
@@ -26,25 +24,13 @@ class Emitter {
             throw new TypeError('invalid isOnce argument');
         }
 
-        if (event === 'ready') {
-
-            // ready event already triggered
-            if (this.ready) {
-                handler.call(this);
-                return this;
-            }
-
-            // otherwise 'ready' handlers are converted to one-time handler
-            isOnce = true;
-        }
-
         // Create a list of event handlers for the event if one does not exist
-        if (this[eventListenersKey][event] == null) {
-            this[eventListenersKey][event] = [];
+        if (this[$eventListenersKey][event] == null) {
+            this[$eventListenersKey][event] = [];
         }
 
         // Store the handler
-        this[eventListenersKey][event].push({
+        this[$eventListenersKey][event].push({
             handler: handler,
             once: isOnce == null ? false : isOnce
         });
@@ -70,16 +56,11 @@ class Emitter {
             throw new TypeError('invalid isOneTimeHandler argument');
         }
 
-        let listeners = self[eventListenersKey][event];
+        let listeners = self[$eventListenersKey][event];
 
         // event does not have registered listeners so nothing left to do
         if (listeners == null || !listeners.length) {
             return;
-        }
-
-        // ready event handler should be one-time event handlers
-        if (event === 'ready') {
-            isOnce = true;
         }
 
         // find
@@ -120,9 +101,9 @@ class Emitter {
 
         // No listeners for event
         if (
-            this[eventListenersKey] == null ||
-            this[eventListenersKey][event] == null ||
-            this[eventListenersKey][event].length === 0
+            this[$eventListenersKey] == null ||
+            this[$eventListenersKey][event] == null ||
+            this[$eventListenersKey][event].length === 0
         ) {
             return this;
         }
@@ -130,7 +111,7 @@ class Emitter {
         options = options == null ? {} : options;
 
         let self      = this,
-            listeners = this[eventListenersKey][event],
+            listeners = this[$eventListenersKey][event],
             stopped   = false,
             evt       = Object.create(null),
             idx       = 0;
@@ -164,7 +145,7 @@ class Emitter {
             }
 
             // Attempt to call handler
-            listener.handler.call(self, evt);
+            listener.handler.call(options.self != null ? options.self : self, evt);
 
             // Listener called .stop() - exit processing
             if (stopped && options.stoppable !== false) {

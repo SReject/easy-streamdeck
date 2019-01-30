@@ -3,8 +3,10 @@
     <head>
         <title>easy-streamDeck - Action Example</title>
         <meta charset="utf-8">
-        <script src="./easy-streamdeck.js"></script>
         <link rel="stylesheet" href="sdpi.css">
+
+        <!-- include easy-streamdeck library before scripts that make use of it -->
+        <script src="./easy-streamdeck.js"></script>
     </head>
     <body>
         <div class="sdpi-wrapper">
@@ -41,29 +43,55 @@
         </div>
         <script>
 
+        // wait for straem deck to be ready
         streamdeck.on('ready', function () {
 
+            // Function to make updating values easier
+            function updateValue(evt) {
+
+                // Retrieves current settings from the background Instance
+                streamdeck.getSettings().then(settings => {
+
+                    // updates the select, slider keyPressCounter values
+                    settings.keyPressCounter =
+                        eleValueSlider.value =
+                        eleValueSelect.value =
+                        evt.target.value;
+
+                    // then tells background instance
+                    return streamdeck.setSettings(settings);
+
+                // log any errors tha occured
+                }).catch(err => {
+                    console.error(err)
+                });
+            }
+
+            // get references to the select, slider and background select elements
             let eleValueSelect = document.getElementById('value-select'),
                 eleValueSlider = document.getElementById('value-slider'),
                 eleBgSelect    = document.getElementById('background-select');
 
-            streamdeck.invoke('getnumbervalue').then(res => {
-                eleValueSlider.value = eleValueSelect.value = res;
+            // Ask for settings from the background instance and wait for a response
+            streamdeck.getSettings().then(res => {
 
+                // then update the select and slider values
+                eleValueSelect.value = eleValueSlider.value = res.keyPressCounter;
+
+            // log any errors tha occured
             }).catch(err => {
-                console.log(err);
+                console.error(err);
             });
 
-            eleValueSelect.addEventListener('change', function (evt) {
-                streamdeck.notify('setvalue', eleValueSlider.value = eleValueSelect.value);
-            });
+            // monitor changes to select and slider
+            eleValueSelect.addEventListener('change', updateValue);
+            eleValueSlider.addEventListener('change', updateValue);
 
-            eleValueSlider.addEventListener('change', function (evt) {
-                streamdeck.notify('setvalue', eleValueSelect.value = eleValueSlider.value);
-            });
-            
+            // monitor changes to the background selector
             eleBgSelect.addEventListener('change', function () {
-                streamdeck.notify('setbackground', eleBgSelect.value);
+
+                // tell background instance to set background
+                streamdeck.setImageFromUrl(`./icons/${eleBgSelect.value}.png`);
             });
         });
         </script>

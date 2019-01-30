@@ -1,7 +1,7 @@
 {
-    "Name": "easy-streamdeck Example: Number Display",
+    "Name": "easy-streamdeck Example: Counter",
     "Author": "SReject",
-    "Description": "Recreation of Elgato's NumberDisplay plugin using easy-streamdeck",
+    "Description": "Recreation of Elgato's Counter plugin using easy-streamdeck",
     "URL": "https://github.com/SReject/easy-streamdeck",
     "Icon": "./example/icons/pluginIcon",
     "Version": "1.0.0",
@@ -19,7 +19,7 @@
     "Actions": [
         {
             "Icon": "./example/icons/actionIcon",
-            "Name": "Number Display",
+            "Name": "Counter",
             "States": [
                 {
                     "Image": "./example/icons/actionDefaultImage",
@@ -28,7 +28,7 @@
                 }
             ],
             "SupportedInMultiActions": false,
-            "Tooltip": "This action displays a value set by the user",
+            "Tooltip": "Counts how many times the button was pressed",
             "UUID": "com.srject.easystreamdeck.numberdisplay"
         }
     ],
