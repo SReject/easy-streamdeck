@@ -540,9 +540,9 @@ This event is suppressed if its handled by the Cross-Layer Communication protoco
 
 <br><br><br>
 
-## Structures
+# Structures
 
-### Host
+## Host
 Describes streamdeck's host enviornment
 
 | Property\* | Type   | Description                                          |
@@ -553,9 +553,9 @@ Describes streamdeck's host enviornment
 
 \*: Properties are read-only
 
-<br>
+<br><br>
 
-### Device 
+## Device 
 Describes a streamdeck hardware device
 
 | Property\* | Type   | Description                                  |
@@ -567,9 +567,9 @@ Describes a streamdeck hardware device
 
 \*: Properties are read-only
 
-<br>
+<br><br>
 
-### Title
+## Title
 Describes a context's title
 
 | Property\*  | Type    | Description                                                                         |
@@ -584,20 +584,9 @@ Describes a context's title
 
 \*: Properties are read-only
 
-<br>
+<br><br>
 
-### Event  
-Passed as the only argument to event handlers when an event is emitted
-
-#### `<event>.stop()`
-If called, no other event handlers will be called for the emitted event instance
-
-#### `<event>.data`
-The data accompanying the event; the value varies dependant on the event being emitted  
-
-<br>
-
-### Context
+## Context
 Describes a context
 
 ### Properties
@@ -706,3 +695,16 @@ Raises a notify event on the context
 |-----------|:------:|---------------------------------|
 | `event`   | string | The name of the event to emit   |
 | `data`    | *any*  | The data to accompany the event |
+
+<br><br>
+
+## Event  
+Passed as the only argument to event handlers when an event is emitted
+
+#### `<event>.stop()`
+If called, no other event handlers will be called for the emitted event instance
+
+#### `<event>.data`
+The data accompanying the event; the value varies dependant on the event being emitted  
+
+<br>
