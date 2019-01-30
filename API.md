@@ -118,10 +118,6 @@ Emitted when the underlying websocket connection to the streamdeck software conn
 
 `this` refers to the streamdeck instance
 
-| `<event.data>` Property | Type | Description |
-|-------------------------|:----:|-------------|
-| *none*                  |      |             |  
-
 <br>  
 
 #### `websocket:message`  
@@ -153,20 +149,12 @@ Emitted when the underlying websocket connection suffers from either a protocol 
 
 `this` refers to the streamdeck instance
 
-| `<event.data>` Property | Type | Description                                         |
-|-------------------------|:----:|-----------------------------------------------------|
-| *none*                  |      | No information is provided as to what error occured |  
-
 <br>  
 
 #### `ready`
 Emitted when easy-streamdeck is ready  
 
 `this` refers to the streamdeck instance
-
-| `<event.data>` Property | Type | Description |
-|-------------------------|:----:|-------------|
-| *none*                  |      |             |  
 
 <br><br><br>
 
@@ -609,7 +597,7 @@ The data accompanying the event; the value varies dependant on the event being e
 
 <br>
 
-## Context
+### Context
 Describes a context
 
 ### Properties
