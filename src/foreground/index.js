@@ -108,6 +108,20 @@ function foreground(streamdeck, selfinfo) {
             value: function setSettings(settings) {
                 return this.invoke('$setSettings', settings);
             }
+        },
+
+        // show alerts
+        showAlert: {
+            enumerable: true,
+            value: function showAlert() {
+                return this.invoke('$showAlert');
+            }
+        },
+        showOk: {
+            enumerable: true,
+            value: function showOk() {
+                return this.invoke('$showOk');
+            }
         }
     });
 }

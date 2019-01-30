@@ -178,8 +178,8 @@ function onMessageWrapper(deviceList, contextList) {
         case 'keyUp':
         case 'keyDown':
             eventName = msg.event === 'keyUp' ? 'up' : 'down';
-            this.emit(`keypress:${eventName}`, device, {self: context});
-            this.emit('keypress', {event: eventName, device: device}, {self: context});
+            this.emit(`keypress:${eventName}`, null, {self: context});
+            this.emit('keypress', {event: eventName}, {self: context});
             return;
 
         case 'willAppear':

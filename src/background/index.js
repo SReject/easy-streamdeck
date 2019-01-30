@@ -73,6 +73,9 @@ function background(streamdeck, deviceList) {
     irn.register('$setImage', function (image, target) {
         this.setImage(image, target);
     });
+    irn.register('$setImageFromUrl', function (url, target) {
+        this.setImageFromUrl(url, target);
+    });
     irn.register('$getState', function () {
         return this.state;
     });
@@ -86,6 +89,12 @@ function background(streamdeck, deviceList) {
     irn.register('$setSettings', function (settings) {
         this.setSettings(settings);
         return this.settings;
+    });
+    irn.register(`$showAlert`, function () {
+        this.showAlert();
+    });
+    irn.register(`$showOk`, function () {
+        this.showOk();
     });
 }
 

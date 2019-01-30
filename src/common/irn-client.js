@@ -100,6 +100,7 @@ function irnClient(streamdeck) {
                 return;
             }
             streamdeck.emit(`notify:${data.meta}`, data.data);
+            streamdeck.emit(`notify`, {event: data.meta, data: data.data});
             break;
 
         case 'response':
