@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="sdpi.css">
 
         <!-- include easy-streamdeck library before scripts that make use of it -->
-        <script src="./easy-streamdeck-v2.0.0js"></script>
+        <script src="./easy-streamdeck-v2.0.1.js"></script>
     </head>
     <body>
         <div class="sdpi-wrapper">
@@ -59,7 +59,9 @@
                         evt.target.value;
 
                     // then tells background instance
-                    return streamdeck.setSettings(settings);
+                    return streamdeck.setSettings(settings).then(settings => {
+                        return streamdeck.setTitle(settings.keyPressCounter, 0);
+                    });
 
                 // log any errors tha occured
                 }).catch(err => {

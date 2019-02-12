@@ -29,7 +29,7 @@
             ],
             "SupportedInMultiActions": false,
             "Tooltip": "Counts how many times the button was pressed",
-            "UUID": "com.srject.easystreamdeck.counter"
+            "UUID": "com.sreject.easystreamdeck.counter"
         }
     ],
 
