@@ -12,7 +12,9 @@ let onConnect = false;
 
 function cleanup(self) {
     if (self[$websock] != null) {
-        self[$websock].close();
+        if (self[$websock].readyState < 2) {
+            self[$websock].close();
+        }
         self[$websock].onopen    = null;
         self[$websock].onmessage = null;
         self[$websock].onclose   = null;
@@ -46,17 +48,17 @@ class Connection extends Emitter {
         Object.defineProperty(this, $readyState, {writable: true, value: 0});
         Object.defineProperty(this, $reconnectDelay, {writable: true, value: 1000});
         Object.defineProperty(this, $spooledMessages, {writable: true, value: []});
-
-        let self = this;
-        this.on('exiting', function () {
-            cleanup(self);
-        });
     }
 
     // Overridable websocket on-open event handler
     onOpen() {
-        // Reset timeout delay
-        this[$reconnectDelay] = 1000;
+
+        // Reset reconnect timeout
+        if (this[$reconnectTimeout]) {
+            clearTimeout(this[$reconnectTimeout]);
+            this[$reconnectTimeout] = null;
+            this[$reconnectDelay] = 1000;
+        }
 
         // emit connect event
         this[$readyState] = 2;
@@ -159,6 +161,7 @@ class Connection extends Emitter {
         if (this[$websock]) {
             return this;
         }
+
         if (address != null) {
             if (this[$addressKey] == null) {
                 Object.defineProperty(this, $addressKey, {value: address});

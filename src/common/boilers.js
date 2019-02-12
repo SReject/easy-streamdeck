@@ -7,9 +7,10 @@ if (typeof WebSocket !== 'function') {
 
 // canvas missing, use image-data-uri package
 if (typeof HTMLCanvasElement !== 'function') {
-    exports.imageToDataURL = require('image-data-uri');
+    exports.imageToDataUrl = require('image-data-uri');
+
 } else {
-    exports.imageToDataURL = function (url) {
+    exports.imageToDataUrl = function (url) {
         return new Promise((resolve, reject) => {
             let image = new Image();
 

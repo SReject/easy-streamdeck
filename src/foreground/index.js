@@ -81,6 +81,12 @@ function foreground(streamdeck, selfinfo) {
                 return this.invoke('$setImage', image, target);
             }
         },
+        setImageFromUrl: {
+            enumerable: true,
+            value: function setImageFromUrl(url, target) {
+                return this.invoke('$setImageToUrl', url, target);
+            }
+        },
 
         // get/setState functions
         getState: {

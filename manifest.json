@@ -4,7 +4,7 @@
     "Description": "Recreation of Elgato's Counter plugin using easy-streamdeck",
     "URL": "https://github.com/SReject/easy-streamdeck",
     "Icon": "./example/icons/pluginIcon",
-    "Version": "1.0.0",
+    "Version": "2.0.0",
     "OS": [
         {
             "Platform": "mac", 
@@ -29,7 +29,7 @@
             ],
             "SupportedInMultiActions": false,
             "Tooltip": "Counts how many times the button was pressed",
-            "UUID": "com.srject.easystreamdeck.numberdisplay"
+            "UUID": "com.sreject.easystreamdeck.counter"
         }
     ],
 

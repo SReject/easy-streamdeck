@@ -248,14 +248,16 @@ class StreamDeck extends Connection {
             foreground(this, selfinfo);
         }
 
+        let self = this;
+
         // start connection to Stream Deck
         this.connect(`ws://localhost:${port}`);
         this.on('websocket:connect', function (evt) {
-            this.send({
+            evt.stop();
+            self.send({
                 event: register,
                 uuid:  id
             });
-            evt.stop();
         });
 
         // emit ready event

@@ -65,7 +65,7 @@ function background(streamdeck, deviceList) {
     });
     irn.register('$setTitle', function (title, target) {
         this.setTitle(title, target);
-        return this.title.text;
+        return title;
     });
     irn.register('$getImage', function () {
         throw new Error('not supported');
@@ -82,13 +82,14 @@ function background(streamdeck, deviceList) {
     irn.register('$setState', function (state) {
         this.setState(state);
         this.state = state;
+        return state;
     });
     irn.register('$getSettings', function () {
         return this.settings;
     });
     irn.register('$setSettings', function (settings) {
         this.setSettings(settings);
-        return this.settings;
+        return settings;
     });
     irn.register(`$showAlert`, function () {
         this.showAlert();
