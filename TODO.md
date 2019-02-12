@@ -1,1 +1,0 @@
-Fix `notify` not binding `this` properly
