@@ -4,7 +4,7 @@
   "description": "Abstraction layer for streamdeck's SDK",
   "main": "index.js",
   "scripts": {
-    "build": "browserify --node --no-bundle-external --no-bf index.js | terser > example/easy-streamdeck-v2.0.1.js"
+    "build": "browserify --node --no-bundle-external --no-bf index.js | terser > easy-streamdeck-v2.0.1.js"
   },
   "repository": {
     "type": "git",

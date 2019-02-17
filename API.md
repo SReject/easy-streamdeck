@@ -705,6 +705,21 @@ Passed as the only argument to event handlers when an event is emitted
 If called, no other event handlers will be called for the emitted event instance
 
 #### `<event>.data`
-The data accompanying the event; the value varies dependant on the event being emitted  
+The data accompanying the event; the value varies dependant on the event being emitted
+
+<br><br><br>
+
+# NodeJS
+
+#### `<streamdeck>.start()
+Begins the start up process for the streamdeck instance
+
+| Arguments    | Type                    | Description                                                                |
+|--------------|:-----------------------:|----------------------------------------------------------------------------|
+| `port`       | number                  | Websocket port of which to connect                                         |
+| `uuid`       | sting                   | The instances UUID                                                         |
+| `registerAs` | string                  | The register event; either `registerPlugin` or `registerPropertyInspector` |
+| `hostInfo`   | [`HostInfo`](https://developer.elgato.com/documentation/stream-deck/sdk/registration-procedure/#info-parameter) | The host info                                                              |
+| `selfInfo`   | [`SelfInfo`](https://developer.elgato.com/documentation/stream-deck/sdk/registration-procedure/#inapplicationinfo-parameter) | Only specified if this is acting as a PropertyInspector instance           |
 
 <br>
